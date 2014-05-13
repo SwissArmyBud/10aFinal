@@ -3,7 +3,8 @@
 
     <string name="app_name">BasicApp</string>
     <string name="hello_world">Hello world!</string>
-    <string name="button_text">Push Me</string>
-    <string name="main_text">Hello world!</string>
+    <string name="main_button_text">Push Me</string>
+    <string name="main_text_hint">Hello world!</string>
+    <string name="menu_settings_text">Settings</string>
 
 </resources>

@@ -6,11 +6,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 
 public class MainActivity extends Activity {
 
     private static final String LIFECYCLE = "LifeCycle";
+    private static final String EVENT = "Event";
 	
    /*
     * LIFECYCLE CREATION PATH
@@ -28,13 +31,42 @@ public class MainActivity extends Activity {
 	***DESTRUCTION***
 
     */
+    
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         Log.i(LIFECYCLE, "onCreate");
         
+        Button button = (Button)findViewById(R.id.main_button);
+        button.setOnClickListener(
+            	new Button.OnClickListener() {
+            		public void onClick(View v) {
+                    	 EditText mainText = (EditText)findViewById(R.id.main_text);
+                         mainText.setHint("Button clicked");
+            		}
+            	}
+         );
         
+        /*__________________________________
+         * 
+         * AN EXTRA BLOCK FOR SETTING BUTTON LISTENERS - REPLACE button_name WITH ID NAME
+         * _________________________________
+         *
+         
+         Button button = (Button)findViewById(R.id.button_name);
+         button.setOnClickListener(
+            	new Button.OnClickListener() {
+            		public void onClick(View v) {
+            			//TODO
+            		}
+            	}
+         );
+            
+		*
+		*
+		*/
+         
     }
 
     protected void onStart() {
@@ -127,7 +159,7 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		Log.i(LIFECYCLE, "MENU CREATED");
+		Log.i(EVENT, "MENU CREATED");
 		return true;
 	}
 
@@ -141,7 +173,7 @@ public class MainActivity extends Activity {
 		//ADD MENU OPTION EFFECTS
 		
 		if (id == R.id.settings_button) {
-			Log.i(LIFECYCLE, "SETTINGS PRESSED");
+			Log.i(EVENT, "SETTINGS PRESSED");
 			return true;
 		}
 		
