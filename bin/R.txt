@@ -235,8 +235,7 @@ int drawable abc_textfield_searchview_holo_light 0x7f020054
 int drawable abc_textfield_searchview_right_holo_dark 0x7f020055
 int drawable abc_textfield_searchview_right_holo_light 0x7f020056
 int drawable ic_launcher 0x7f020057
-int id BUTTON 0x7f05003c
-int id EDITTEXT 0x7f05003d
+int id BUTTON 0x7f05003e
 int id action_bar 0x7f05001c
 int id action_bar_activity_content 0x7f050015
 int id action_bar_container 0x7f05001b
@@ -268,6 +267,8 @@ int id ifRoom 0x7f05000a
 int id image 0x7f050027
 int id listMode 0x7f050001
 int id list_item 0x7f050029
+int id main_button 0x7f05003c
+int id main_text 0x7f05003d
 int id middle 0x7f050012
 int id never 0x7f050009
 int id none 0x7f050010
@@ -285,7 +286,7 @@ int id search_mag_icon 0x7f050035
 int id search_plate 0x7f050036
 int id search_src_text 0x7f050037
 int id search_voice_btn 0x7f05003b
-int id settings_button 0x7f05003e
+int id settings_button 0x7f05003f
 int id shortcut 0x7f05002e
 int id showCustom 0x7f050007
 int id showHome 0x7f050004
@@ -339,9 +340,10 @@ int string abc_searchview_description_submit 0x7f0a0007
 int string abc_searchview_description_voice 0x7f0a0008
 int string abc_shareactionprovider_share_with 0x7f0a000c
 int string abc_shareactionprovider_share_with_application 0x7f0a000b
-int string action_settings 0x7f0a000f
 int string app_name 0x7f0a000d
+int string button_text 0x7f0a000f
 int string hello_world 0x7f0a000e
+int string main_text 0x7f0a0010
 int style AppBaseTheme 0x7f0b008b
 int style AppTheme 0x7f0b008c
 int style TextAppearance_AppCompat_Base_CompactMenu_Dialog 0x7f0b0063

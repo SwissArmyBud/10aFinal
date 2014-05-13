@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
 		super.onSaveInstanceState(outState);
 		Log.i(LIFECYCLE, "onSaveInstanceState");
 		
-		final EditText textBox = (EditText) findViewById(R.id.EDITTEXT);
+		final EditText textBox = (EditText) findViewById(R.id.main_text);
 		CharSequence userText = textBox.getText();
 		outState.putCharSequence("savedText", userText);
 		
@@ -103,7 +103,7 @@ public class MainActivity extends Activity {
 	protected void onRestoreInstanceState(Bundle savedState) {		
 		Log.i(LIFECYCLE, "onRestoreInstanceState");
 		
-		final EditText textBox = (EditText) findViewById(R.id.EDITTEXT);
+		final EditText textBox = (EditText) findViewById(R.id.main_text);
 		CharSequence userText = savedState.getCharSequence("savedText");
 		textBox.setText(userText);
 		

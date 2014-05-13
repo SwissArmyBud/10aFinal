@@ -4,22 +4,22 @@
     android:layout_height="match_parent" >
 
     <Button
-        android:id="@+id/BUTTON"
+        android:id="@+id/main_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Butt Text" />
+        android:text="@+string/button_text" />
 
     <EditText
-        android:id="@+id/EDITTEXT"
+        android:id="@+id/main_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/BUTTON"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
         android:ems="10"
-        android:hint="Hint Text"
+        android:hint="@+string/main_text"
         android:inputType="text" >
 
         <requestFocus />
