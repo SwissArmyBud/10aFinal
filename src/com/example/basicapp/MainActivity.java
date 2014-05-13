@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class MainActivity extends Activity {
 
-    private static final String TAG = "LifeCycle";
+    private static final String LIFECYCLE = "LifeCycle";
 	
    /*
     * LIFECYCLE CREATION PATH
@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
 	onResume
 	***EXECUTION***
 	onPause
-	onSaveInstanceState (Dynamic Tranistion from VM)
+	onSaveInstanceState (Dynamic Transition from VM)
 	onStop
 	onDestroy
 	***DESTRUCTION***
@@ -32,21 +32,21 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        Log.i(TAG, "onCreate");
+        Log.i(LIFECYCLE, "onCreate");
         
         
     }
 
     protected void onStart() {
 		super.onStart();
-		Log.i(TAG, "onStart");
+		Log.i(LIFECYCLE, "onStart");
 		
 		
 	}
 	
 	protected void onResume() {
 		super.onResume();
-		Log.i(TAG, "onResume");
+		Log.i(LIFECYCLE, "onResume");
 		
 		
 	}
@@ -55,35 +55,35 @@ public class MainActivity extends Activity {
 	
 	protected void onPause() {
 		super.onPause();
-		Log.i(TAG, "onPause");
+		Log.i(LIFECYCLE, "onPause");
 		
 		
 	}
 	
 	protected void onStop() {
 		super.onStop();
-		Log.i(TAG, "onStop");
+		Log.i(LIFECYCLE, "onStop");
 		
 		
 	}
 	
 	protected void onRestart() { //CALLED BETWEEN onStop AND onStart WHEN RESTARTING FROM PAST onStop IN LIFECYCLE
 		super.onRestart();
-		Log.i(TAG, "onRestart");
+		Log.i(LIFECYCLE, "onRestart");
 		
 		
 	}
 
 	protected void onDestroy() {
 		super.onDestroy();
-		Log.i(TAG, "onDestroy");
+		Log.i(LIFECYCLE, "onDestroy");
 		
 		
 	}
 
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.i(TAG, "onSaveInstanceState");
+		Log.i(LIFECYCLE, "onSaveInstanceState");
 		
 		final EditText textBox = (EditText) findViewById(R.id.EDITTEXT);
 		CharSequence userText = textBox.getText();
@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
 	}
 	
 	protected void onRestoreInstanceState(Bundle savedState) {		
-		Log.i(TAG, "onRestoreInstanceState");
+		Log.i(LIFECYCLE, "onRestoreInstanceState");
 		
 		final EditText textBox = (EditText) findViewById(R.id.EDITTEXT);
 		CharSequence userText = savedState.getCharSequence("savedText");
@@ -127,6 +127,7 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		Log.i(LIFECYCLE, "MENU CREATED");
 		return true;
 	}
 
@@ -140,6 +141,7 @@ public class MainActivity extends Activity {
 		//ADD MENU OPTION EFFECTS
 		
 		if (id == R.id.settings_button) {
+			Log.i(LIFECYCLE, "SETTINGS PRESSED");
 			return true;
 		}
 		
