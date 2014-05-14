@@ -4,32 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <!-- <Button -->
-    <!-- android:id="@+id/main_button" -->
-    <!-- android:layout_width="wrap_content" -->
-    <!-- android:layout_height="wrap_content" -->
-    <!-- android:layout_centerHorizontal="true" -->
-    <!-- android:layout_centerVertical="true" -->
-    <!-- android:text="@+string/main_button_text" /> -->
-
-
-    <!-- <EditText -->
-    <!-- android:id="@+id/main_text" -->
-    <!-- android:layout_width="wrap_content" -->
-    <!-- android:layout_height="wrap_content" -->
-    <!-- android:layout_above="@+id/main_button" -->
-    <!-- android:layout_centerHorizontal="true" -->
-    <!-- android:layout_marginBottom="50dp" -->
-    <!-- android:ems="10" -->
-    <!-- android:hint="@+string/main_text_hint" -->
-    <!-- android:inputType="text" > -->
-
-
-    <!-- <requestFocus /> -->
-    <!-- </EditText> -->
-
     <fragment
-        android:id="@+id/red_fragment"
+        android:id="@+id/fragment_one"
         android:name="com.example.basicapp.FragmentOne"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -90,9 +90,7 @@ public class MainActivity extends FragmentActivity {
 		super.onPause();
 		Log.i(LIFECYCLE, "onPause");
 		
-		EditText mainText = (EditText)findViewById(R.id.main_text);
-        mainText.setHint("App Paused");
-        Log.i(EVENT, "onPause COMPLETE");
+		
 	}
 	
 	protected void onStop() {
