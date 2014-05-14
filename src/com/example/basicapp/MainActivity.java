@@ -1,16 +1,16 @@
 package com.example.basicapp;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     private static final String LIFECYCLE = "LifeCycle";
     private static final String EVENT = "Event";
@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
             		public void onClick(View v) {
                     	 EditText mainText = (EditText)findViewById(R.id.main_text);
                          mainText.setHint("Button clicked");
+                         Log.i(EVENT, "BUTTON CLICKED");
             		}
             	}
          );
@@ -89,7 +90,9 @@ public class MainActivity extends Activity {
 		super.onPause();
 		Log.i(LIFECYCLE, "onPause");
 		
-		
+		EditText mainText = (EditText)findViewById(R.id.main_text);
+        mainText.setHint("App Paused");
+        Log.i(EVENT, "onPause COMPLETE");
 	}
 	
 	protected void onStop() {
@@ -118,7 +121,7 @@ public class MainActivity extends Activity {
 		Log.i(LIFECYCLE, "onSaveInstanceState");
 		
 		final EditText textBox = (EditText) findViewById(R.id.main_text);
-		CharSequence userText = textBox.getText();
+		CharSequence userText = textBox.getHint();
 		outState.putCharSequence("savedText", userText);
 		
 		/*
@@ -137,7 +140,7 @@ public class MainActivity extends Activity {
 		
 		final EditText textBox = (EditText) findViewById(R.id.main_text);
 		CharSequence userText = savedState.getCharSequence("savedText");
-		textBox.setText(userText);
+		textBox.setHint(userText);
 		
 		/*
 		 * AN EXTRA BLOCK FOR GETTING TEXT - REPLACE textBoxName WITH ID NAME
