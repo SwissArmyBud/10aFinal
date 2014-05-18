@@ -50,8 +50,7 @@ public class MainActivity extends FragmentActivity {
         FragmentTransaction transaction = fragManager.beginTransaction();
         transaction.add(R.id.main_container, firstFragment);	
         transaction.commit();
-        Log.i(LIFECYCLE, "Fragment Commit Finished");
-        
+        Log.i(EVENT, "Fragment Commit Finished");
         
         
         /*__________________________________
@@ -179,6 +178,9 @@ public class MainActivity extends FragmentActivity {
 		//ADD MENU OPTION EFFECTS
 		
 		if (id == R.id.settings_button) {
+			View rootView = findViewById(R.id.main_text);
+			EditText textBox = (EditText) rootView.findViewById(R.id.main_text);
+			textBox.setHint("Settings Pressed");
 			Log.i(EVENT, "SETTINGS PRESSED");
 			return true;
 		}

@@ -26,8 +26,15 @@ public class FragmentOne extends Fragment implements OnClickListener{
         return rootView;
     }
 	
+	public void setHint(String string) {
+		View rootView = getView().findViewById(R.id.main_text);
+		EditText textBox = (EditText) rootView.findViewById(R.id.main_text);
+		textBox.setHint(string);
+	}
+	
 	@Override
     public void onClick(View v) {
+		setHint("Banana Button");
 		Log.i(EVENT, "BUTTON CLICKED");
     }
 	
