@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BasicApp</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="main_button_text">Push Me</string>
+    <string name="main_text_hint">Hello world!</string>
+    <string name="menu_settings_text">Settings</string>
+    <string name="frag_text1">Frag Text</string>
+
+</resources>
