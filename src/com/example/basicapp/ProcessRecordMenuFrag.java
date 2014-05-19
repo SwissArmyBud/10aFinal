@@ -11,18 +11,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class FragmentOne extends Fragment implements OnClickListener {
+public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
 
-	Button mainButton;
+	Button addButton;
+	Button resetButton;
+
     private static final String EVENT = "Event";
 	
-    FragOneInterface activityCallback;
+    ProcessRecordMenuFragInterface activityCallback;
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
-    public interface FragOneInterface {
-        public void onButtonPush(String string);
+    public interface ProcessRecordMenuFragInterface {
+        public void addRecordButtonPush();
     }
-    
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
     @Override
@@ -30,10 +31,10 @@ public class FragmentOne extends Fragment implements OnClickListener {
         super.onAttach(activity);
         
         try {
-            activityCallback = (FragOneInterface) activity;
+            activityCallback = (ProcessRecordMenuFragInterface) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnButtonPush");
+                    + " must implement ProcessRecordMenuFragInterface");
         }
         
     }
@@ -43,11 +44,13 @@ public class FragmentOne extends Fragment implements OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
-        View rootView = inflater.inflate(R.layout.fragment_one, container, false);
+        View rootView = inflater.inflate(R.layout.record_process_menu, container, false);
         
         //SET BUTTON CLICK LISTENERS
-        mainButton = (Button) rootView.findViewById(R.id.main_button);
-        mainButton.setOnClickListener(this); 
+        addButton = (Button) rootView.findViewById(R.id.commit_record_button);
+        addButton.setOnClickListener(this); 
+        resetButton = (Button) rootView.findViewById(R.id.reset_record_button);
+        resetButton.setOnClickListener(this); 
         
         return rootView;
     }
@@ -59,11 +62,13 @@ public class FragmentOne extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		
 		//adding cases for different BUTTON ids
-	    case R.id.main_button:
-	    	activityCallback.onButtonPush("FRAG onClick");
-	        break;
-	        
-		}
+    case R.id.commit_record_button:
+    	activityCallback.addRecordButtonPush();
+        break;
+    case R.id.reset_record_button:
+    	resetFields();
+        break;
+	}
 		
 		Log.i(EVENT, "BUTTON CLICKED");
     }
@@ -74,10 +79,8 @@ public class FragmentOne extends Fragment implements OnClickListener {
 	* ____________________________________________
     */
 	
-	public void setHint(String string) {
-		View rootView = getView().findViewById(R.id.main_text);
-		EditText textBox = (EditText) rootView.findViewById(R.id.main_text);
-		textBox.setHint(string);
+	public void resetFields() {
+		
 	}
 	
 }

@@ -6,21 +6,20 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class RecordProcessFragment extends Fragment implements OnClickListener {
+public class RecordProcessFragment extends Fragment {
 
 	Button mainButton;
     private static final String EVENT = "Event";
 	
-    RecordProcessFrag activityCallback;
+    RecordProcessFragInterface activityCallback;
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
-    public interface RecordProcessFrag {
-        public void onButtonPush(String string);
+    public interface RecordProcessFragInterface {
+        public void addRecord(String string);
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -29,10 +28,10 @@ public class RecordProcessFragment extends Fragment implements OnClickListener {
         super.onAttach(activity);
         
         try {
-            activityCallback = (RecordProcessFrag) activity;
+            activityCallback = (RecordProcessFragInterface) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnButtonPush");
+                    + " must implement RecordProcessFrag Interface");
         }
         
     }
@@ -42,29 +41,9 @@ public class RecordProcessFragment extends Fragment implements OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
-        View rootView = inflater.inflate(R.layout.fragment_one, container, false);
-        
-        //SET BUTTON CLICK LISTENERS
-        mainButton = (Button) rootView.findViewById(R.id.main_button);
-        mainButton.setOnClickListener(this); 
+        View rootView = inflater.inflate(R.layout.fragment_record_modify, container, false);
         
         return rootView;
-    }
-	
-	//THIS SECTION IS ACTIVATED WHEN A BUTTON IS CLICKED
-	@Override  
-    public void onClick(View v) { 
-		
-		switch (v.getId()) {
-		
-		//adding cases for different BUTTON ids
-	    case R.id.main_button:
-	    	activityCallback.onButtonPush("FRAG onClick");
-	        break;
-	        
-		}
-		
-		Log.i(EVENT, "BUTTON CLICKED");
     }
 	
    /* ____________________________________________
@@ -73,10 +52,15 @@ public class RecordProcessFragment extends Fragment implements OnClickListener {
 	* ____________________________________________
     */
 	
-	public void setHint(String string) {
+	public void setFields(String string) {
 		View rootView = getView().findViewById(R.id.main_text);
 		EditText textBox = (EditText) rootView.findViewById(R.id.main_text);
 		textBox.setHint(string);
+		Log.i(EVENT, "RecordProcessFragment setFields complete");
+	}
+	
+	private String makeRecord(String string) {
+		return "";
 	}
 	
 }

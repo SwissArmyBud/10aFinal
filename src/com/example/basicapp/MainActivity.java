@@ -1,16 +1,19 @@
 package com.example.basicapp;
 
 import com.example.basicapp.HomeFragment.HomeFragmentInterface;
+import com.example.basicapp.ProcessRecordMenuFrag.ProcessRecordMenuFragInterface;
+import com.example.basicapp.RecordProcessFragment.RecordProcessFragInterface;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-public class MainActivity extends FragmentActivity implements HomeFragmentInterface {
+public class MainActivity extends FragmentActivity implements HomeFragmentInterface, RecordProcessFragInterface, ProcessRecordMenuFragInterface {
 
     private static final String LIFECYCLE = "LifeCycle";
     private static final String EVENT = "Event";
@@ -40,7 +43,6 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
         
         //SETTING ROOT VIEW
         setContentView(R.layout.activity_main);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         
         //INJECTING FRAGMENTS INTO ROOT VIEW
         if (savedInstanceState != null) {
@@ -52,7 +54,7 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
         HomeFragment homeFrag = new HomeFragment();	
         homeFrag.setArguments(getIntent().getExtras());	
         
-        transaction.add(R.id.main_top_frame, homeFrag, "HomeFrag");	
+        transaction.add(R.id.main_top_frame, homeFrag, "HomeFrag");
         transaction.commit();
         
         Log.i(EVENT, "onCreate Fragment Commit Finished");
@@ -101,18 +103,22 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
 		super.onSaveInstanceState(outState);
 		Log.i(LIFECYCLE, "onSaveInstanceState");
 		
+		/*
 		EditText textBox = (EditText) findViewById(R.id.main_text);
 		CharSequence userText = textBox.getHint();
 		outState.putCharSequence("savedText", userText);
+		*/
 		
 	}
 	
 	protected void onRestoreInstanceState(Bundle savedState) {	//CALLED AFTER onStart USUALLY DURING ORIENTATION TRANSITION
 		Log.i(LIFECYCLE, "onRestoreInstanceState");
 		
+		/*
 		EditText textBox = (EditText) findViewById(R.id.main_text);
 		CharSequence userText = savedState.getCharSequence("savedText");
 		textBox.setHint(userText);
+		*/
 
 	}
     
@@ -158,6 +164,11 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
 	* ____________________________________________
 	*/
 	
+	private void updateStatus(String string) {
+        TextView statusText = (TextView) findViewById(R.id.current_status);
+        statusText.setText(string);
+	}
+	
 	public void setTextHint(String string) {
 		
 		FragmentOne fragOne = (FragmentOne) getSupportFragmentManager().findFragmentByTag("FragOneTrans");
@@ -170,8 +181,22 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
 	public void homeAddRecordButtonPush() {
 		// TODO Auto-generated method stub
 		Log.i(EVENT, "HomeFragment addRecord push method in MainActivity");
+		
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        
+        RecordProcessFragment recordFrag = new RecordProcessFragment();	
+        ProcessRecordMenuFrag recordMenuFrag = new ProcessRecordMenuFrag();	
+        recordFrag.setArguments(getIntent().getExtras());	
+        recordMenuFrag.setArguments(getIntent().getExtras());	
+        
+        transaction.replace(R.id.main_top_frame, recordFrag, "RecordFrag");
+        transaction.add(R.id.main_bottom_frame, recordMenuFrag, "RecordMenuFrag");
+        transaction.addToBackStack(null);
+        transaction.commit();
+        
+        updateStatus("*** ADDING RECORD ***");
 	}
-
+	
 	@Override
 	public void homeViewLogButton() {
 		// TODO Auto-generated method stub
@@ -182,6 +207,18 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
 	public void homeSaveLogButton() {
 		// TODO Auto-generated method stub
 		Log.i(EVENT, "HomeFragment saveLog push method in MainActivity");
+	}
+
+	@Override
+	public void addRecord(String string) {
+		// TODO Auto-generated method stub
+		Log.i(EVENT, "RecordProcessFragment addRecord method in MainActivity");
+	}
+
+	@Override
+	public void addRecordButtonPush() {
+		// TODO Auto-generated method stub
+		
 	}
     
 	

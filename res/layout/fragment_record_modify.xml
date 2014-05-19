@@ -11,17 +11,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="12"
+            android:layout_weight="0"
             android:text="VIN #:"
             android:textSize="30dp" />
 
         <EditText
             android:id="@+id/vin_input"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:ems="10"
             android:hint="VIN #"
             android:inputType="text" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -62,6 +64,13 @@
             android:indeterminate="false"
             android:max="8"
             android:progress="4" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4/8"
+            android:textSize="30dp" />
 
     </LinearLayout>
 
@@ -111,6 +120,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/lin_lay_radio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
@@ -121,31 +131,43 @@
             android:text="Inspection:"
             android:textSize="30dp" />
 
-        <RadioGroup
-            android:id="@+id/radioGroup1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+        <RelativeLayout
+            android:id="@+id/radio_rel_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-            <RadioButton
-                android:id="@+id/inspection_yesOK"
+            <RadioGroup
+                android:id="@+id/radioGroup1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="OK" />
+                android:layout_alignParentBottom="false"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="false"
+                android:layout_centerVertical="false"
+                android:checkedButton="@integer/abc_max_action_buttons"
+                android:orientation="horizontal" >
 
-            <RadioButton
-                android:id="@+id/inspection_no"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No" />
+                <RadioButton
+                    android:id="@+id/inspection_yesOK"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="OK" />
 
-            <RadioButton
-                android:id="@+id/radio2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DX" />
-        </RadioGroup>
+                <RadioButton
+                    android:id="@+id/inspection_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No" />
+
+                <RadioButton
+                    android:id="@+id/radio2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DX" />
+            </RadioGroup>
+
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -159,17 +181,32 @@
             android:text="Pets/Smoke:"
             android:textSize="30dp" />
 
-        <CheckBox
-            android:id="@+id/pets_confirm"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pets" />
+            android:layout_height="match_parent" >
 
-        <CheckBox
-            android:id="@+id/smoke_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Smoke" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="false" >
+
+                <CheckBox
+                    android:id="@+id/pets_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pets" />
+
+                <CheckBox
+                    android:id="@+id/smoke_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Smoke" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
