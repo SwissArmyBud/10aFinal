@@ -164,7 +164,7 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
 	* ____________________________________________
 	*/
 	
-	private void updateStatus(String string) {
+	public void updateStatus(String string) {
         TextView statusText = (TextView) findViewById(R.id.current_status);
         statusText.setText(string);
 	}

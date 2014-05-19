@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class HomeFragment extends Fragment implements OnClickListener {
 
@@ -27,6 +28,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
         public void homeAddRecordButtonPush();
         public void homeViewLogButton();
         public void homeSaveLogButton();
+        public void updateStatus(String string);
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -58,6 +60,8 @@ public class HomeFragment extends Fragment implements OnClickListener {
         saveLogButton = (Button) rootView.findViewById(R.id.save_log_button);
         saveLogButton.setOnClickListener(this); 
         Log.i(EVENT, "HomeFragment button click listeners set");
+
+    	activityCallback.updateStatus("***HOME SCREEN***");
         
         return rootView;
     }
