@@ -1,10 +1,10 @@
 package com.example.basicapp;
 
+import com.example.basicapp.FragmentOne.OnButtonPush;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements OnButtonPush {
 
     private static final String LIFECYCLE = "LifeCycle";
     private static final String EVENT = "Event";
@@ -51,33 +51,13 @@ public class MainActivity extends FragmentActivity {
         transaction.add(R.id.main_container, firstFragment);	
         transaction.commit();
         Log.i(EVENT, "Fragment Commit Finished");
-        
-        
-        /*__________________________________
-         * 
-         * AN EXTRA BLOCK FOR SETTING BUTTON LISTENERS - REPLACE button_name WITH ID NAME
-         * _________________________________
-         *
-         
-         Button button = (Button)findViewById(R.id.button_name);
-         button.setOnClickListener(
-            	new Button.OnClickListener() {
-            		public void onClick(View v) {
-            			//TODO
-            		}
-            	}
-         );
-            
-		*
-		*
-		*/
          
     }
 
     protected void onStart() {
 		super.onStart();
 		Log.i(LIFECYCLE, "onStart");
-		
+		//setHint("setHint text");
 		
 	}
 	
@@ -118,7 +98,7 @@ public class MainActivity extends FragmentActivity {
 		
 	}
 
-	protected void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(Bundle outState) {  //CALLED AFTER onStop USUALLY DURING ORIENTATION TRANSITION
 		super.onSaveInstanceState(outState);
 		Log.i(LIFECYCLE, "onSaveInstanceState");
 		
@@ -137,7 +117,7 @@ public class MainActivity extends FragmentActivity {
 
 	}
 	
-	protected void onRestoreInstanceState(Bundle savedState) {		
+	protected void onRestoreInstanceState(Bundle savedState) {	//CALLED AFTER onStart USUALLY DURING ORIENTATION TRANSITION
 		Log.i(LIFECYCLE, "onRestoreInstanceState");
 		
 		final EditText textBox = (EditText) findViewById(R.id.main_text);
@@ -158,7 +138,7 @@ public class MainActivity extends FragmentActivity {
 	*
 	*	THIS AREA IS FOR HANDLING THE MENU SYSTEM
 	* ____________________________________________
-   */
+    */
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -178,8 +158,7 @@ public class MainActivity extends FragmentActivity {
 		//ADD MENU OPTION EFFECTS
 		
 		if (id == R.id.settings_button) {
-			View rootView = findViewById(R.id.main_text);
-			EditText textBox = (EditText) rootView.findViewById(R.id.main_text);
+			EditText textBox = (EditText) findViewById(R.id.main_text);
 			textBox.setHint("Settings Pressed");
 			Log.i(EVENT, "SETTINGS PRESSED");
 			return true;
@@ -198,6 +177,25 @@ public class MainActivity extends FragmentActivity {
 
 	}
 	
+   /* ____________________________________________
+	*
+	*	THIS AREA IS FOR ADDING SUPPORTING METHODS
+	* ____________________________________________
+	*/
 	
+	public void textHint(String string) {
+		EditText textBox = (EditText) findViewById(R.id.main_text);
+		textBox.setHint(string);
+		Log.i(EVENT, "Activity setHint() complete");
+	}
+	
+    public void onButtonPush(String string) {
+    	textHint(string);
+	}
+    
+    public void onButtonPush(int integer) {
+    	textHint("" + integer);
+	}
+    
 	
 }
