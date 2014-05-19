@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
@@ -46,12 +45,15 @@ public class MainActivity extends FragmentActivity implements FragOneInterface {
         if (savedInstanceState != null) {
             return;
         }
+        
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        
         FragmentOne firstFragment = new FragmentOne();		
-        firstFragment.setArguments(getIntent().getExtras());
-        FragmentManager fragManager = getSupportFragmentManager();		
-        FragmentTransaction transaction = fragManager.beginTransaction();
+        firstFragment.setArguments(getIntent().getExtras());	
+        
         transaction.add(R.id.main_container, firstFragment);	
         transaction.commit();
+        
         Log.i(EVENT, "Fragment Commit Finished");
         
     }
@@ -123,7 +125,7 @@ public class MainActivity extends FragmentActivity implements FragOneInterface {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		
-		// Inflate the menu; this adds items to the action bar if it is present.
+		//MENU INFLATER
 		getMenuInflater().inflate(R.menu.main, menu);
 		Log.i(EVENT, "MENU CREATED");
 		
@@ -135,8 +137,9 @@ public class MainActivity extends FragmentActivity implements FragOneInterface {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
 		switch (item.getItemId()) {
+		//ADD CASES FOR DIFFERENT BUTTON IDS
 		
-		//adding cases for different BUTTON ids
+		//THE "SETTINGS" BUTTON
 	    case R.id.settings_button:
 	    	EditText textBox = (EditText) findViewById(R.id.main_text);
 			textBox.setHint("Settings Pressed");
@@ -158,7 +161,7 @@ public class MainActivity extends FragmentActivity implements FragOneInterface {
 		
 		EditText textBox = (EditText) findViewById(R.id.main_text);
 		textBox.setHint(string);
-		Log.i(EVENT, "Activity setHint() complete");
+		Log.i(EVENT, "MainActivity setHint() complete");
 		
 	}
 	

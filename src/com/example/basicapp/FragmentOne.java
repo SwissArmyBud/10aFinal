@@ -45,7 +45,7 @@ public class FragmentOne extends Fragment implements OnClickListener {
         View rootView = inflater.inflate(R.layout.fragment_one, container, false);
         
         //SET BUTTON CLICK LISTENERS
-        mainButton = (Button) rootView.findViewById(R.id.main_button);
+        mainButton = (Button) rootView.findViewById(R.id.gas_seek_bar);
         mainButton.setOnClickListener(this); 
         
         return rootView;
@@ -58,7 +58,7 @@ public class FragmentOne extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		
 		//adding cases for different BUTTON ids
-	    case R.id.main_button:
+	    case R.id.gas_seek_bar:
 	    	activityCallback.onButtonPush("FRAG onClick");
 	        break;
 	        
