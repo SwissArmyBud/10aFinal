@@ -1,6 +1,8 @@
 package com.example.basicapp;
 
 import com.example.basicapp.FragmentOne.FragOneInterface;
+
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,10 +53,10 @@ public class MainActivity extends FragmentActivity implements FragOneInterface {
         FragmentOne firstFragment = new FragmentOne();		
         firstFragment.setArguments(getIntent().getExtras());	
         
-        transaction.add(R.id.main_container, firstFragment);	
+        transaction.add(R.id.main_container, firstFragment, "FragOneTrans");	
         transaction.commit();
         
-        Log.i(EVENT, "Fragment Commit Finished");
+        Log.i(EVENT, "onCreate Fragment Commit Finished");
         
     }
 
@@ -159,8 +161,8 @@ public class MainActivity extends FragmentActivity implements FragOneInterface {
 	
 	public void setTextHint(String string) {
 		
-		EditText textBox = (EditText) findViewById(R.id.main_text);
-		textBox.setHint(string);
+		FragmentOne fragOne = (FragmentOne) getSupportFragmentManager().findFragmentByTag("FragOneTrans");
+		fragOne.setHint(string);
 		Log.i(EVENT, "MainActivity setHint() complete");
 		
 	}

@@ -96,7 +96,7 @@
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ERAC #:"
+            android:text="Employee ID#:"
             android:textSize="30dp" />
 
         <EditText
@@ -104,7 +104,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Employee Number"
+            android:hint="ID#"
             android:text="E863PB" />
     </LinearLayout>
 
