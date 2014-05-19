@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main_container" >
+    android:id="@+id/main_container"
+    android:orientation="vertical" >"
 
+        <FrameLayout
+            android:id="@+id/main_top_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
 
+        </FrameLayout>
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:id="@+id/main_bottom_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3" >
+            </FrameLayout>
+
+            <RelativeLayout
+                android:id="@+id/status_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="4" >
+
+                <TextView
+                    android:id="@+id/current_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:clickable="false"
+                    android:longClickable="false"
+                    android:text="TextView" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+</LinearLayout>
