@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-
 public class MainActivity extends FragmentActivity implements FragOneInterface {
 
     private static final String LIFECYCLE = "LifeCycle";
