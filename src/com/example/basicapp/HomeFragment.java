@@ -13,14 +13,20 @@ import android.widget.EditText;
 
 public class HomeFragment extends Fragment implements OnClickListener {
 
-	Button mainButton;
-    private static final String EVENT = "Event";
+	Button addRecordButton;
+	Button viewLogButton;
+	Button saveLogButton;
 	
-    RecordProcessFrag activityCallback;
+    private static final String EVENT = "Event";
+    private static final String LIFECYCLE = "LifeCycle";
+	
+    HomeFragmentInterface activityCallback;
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
-    public interface RecordProcessFrag {
-        public void onButtonPush(String string);
+    public interface HomeFragmentInterface {
+        public void homeAddRecordButtonPush();
+        public void homeViewLogButton();
+        public void homeSaveLogButton();
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -29,7 +35,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
         super.onAttach(activity);
         
         try {
-            activityCallback = (RecordProcessFrag) activity;
+            activityCallback = (HomeFragmentInterface) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnButtonPush");
@@ -42,11 +48,16 @@ public class HomeFragment extends Fragment implements OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
-        View rootView = inflater.inflate(R.layout.fragment_one, container, false);
+        View rootView = inflater.inflate(R.layout.home_fragment, container, false);
         
         //SET BUTTON CLICK LISTENERS
-        mainButton = (Button) rootView.findViewById(R.id.main_button);
-        mainButton.setOnClickListener(this); 
+        addRecordButton = (Button) rootView.findViewById(R.id.add_record_button);
+        addRecordButton.setOnClickListener(this); 
+        viewLogButton = (Button) rootView.findViewById(R.id.view_log_button);
+        viewLogButton.setOnClickListener(this); 
+        saveLogButton = (Button) rootView.findViewById(R.id.save_log_button);
+        saveLogButton.setOnClickListener(this); 
+        Log.i(EVENT, "HomeFragment button click listeners set");
         
         return rootView;
     }
@@ -58,13 +69,21 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		
 		//adding cases for different BUTTON ids
-	    case R.id.main_button:
-	    	activityCallback.onButtonPush("FRAG onClick");
+	    case R.id.add_record_button:
+	    	Log.i(EVENT, "HomeFrag calling addRecord()");
+	    	activityCallback.homeAddRecordButtonPush();
+	        break;
+	    case R.id.view_log_button:
+	    	Log.i(EVENT, "HomeFrag calling viewLog()");
+	    	activityCallback.homeViewLogButton();
+	        break;
+	    case R.id.save_log_button:
+	    	Log.i(EVENT, "HomeFrag calling viewLog()");
+	    	activityCallback.homeSaveLogButton();
 	        break;
 	        
 		}
 		
-		Log.i(EVENT, "BUTTON CLICKED");
     }
 	
    /* ____________________________________________

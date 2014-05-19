@@ -1,6 +1,6 @@
 package com.example.basicapp;
 
-import com.example.basicapp.FragmentOne.FragOneInterface;
+import com.example.basicapp.HomeFragment.HomeFragmentInterface;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-public class MainActivity extends FragmentActivity implements FragOneInterface {
+public class MainActivity extends FragmentActivity implements HomeFragmentInterface {
 
     private static final String LIFECYCLE = "LifeCycle";
     private static final String EVENT = "Event";
@@ -49,10 +49,10 @@ public class MainActivity extends FragmentActivity implements FragOneInterface {
         
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         
-        FragmentOne firstFragment = new FragmentOne();		
-        firstFragment.setArguments(getIntent().getExtras());	
+        HomeFragment homeFrag = new HomeFragment();	
+        homeFrag.setArguments(getIntent().getExtras());	
         
-        transaction.add(R.id.main_container, firstFragment, "FragOneTrans");	
+        transaction.add(R.id.main_top_frame, homeFrag, "HomeFrag");	
         transaction.commit();
         
         Log.i(EVENT, "onCreate Fragment Commit Finished");
@@ -165,17 +165,23 @@ public class MainActivity extends FragmentActivity implements FragOneInterface {
 		Log.i(EVENT, "MainActivity setHint() complete");
 		
 	}
-	
-    public void onButtonPush(String string) {
-    	
-    	setTextHint(string);
-    	
+
+	@Override
+	public void homeAddRecordButtonPush() {
+		// TODO Auto-generated method stub
+		Log.i(EVENT, "HomeFragment addRecord push method in MainActivity");
 	}
-    
-    public void onButtonPush(int integer) {
-    	
-    	setTextHint("" + integer);
-    	
+
+	@Override
+	public void homeViewLogButton() {
+		// TODO Auto-generated method stub
+		Log.i(EVENT, "HomeFragment viewLog push method in MainActivity");
+	}
+
+	@Override
+	public void homeSaveLogButton() {
+		// TODO Auto-generated method stub
+		Log.i(EVENT, "HomeFragment saveLog push method in MainActivity");
 	}
     
 	
