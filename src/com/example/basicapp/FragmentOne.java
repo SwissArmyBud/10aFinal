@@ -13,55 +13,57 @@ import android.widget.EditText;
 
 public class FragmentOne extends Fragment implements OnClickListener {
 
-	Button button;
+	Button mainButton;
     private static final String EVENT = "Event";
 	
-    OnButtonPush activityCallback;
+    FragOneInterface activityCallback;
 
-    // Container Activity must implement this interface
-    public interface OnButtonPush {
+    //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
+    public interface FragOneInterface {
         public void onButtonPush(String string);
     }
 
-    //this section verifies the interface compliance
+    //THIS SECTION ENSURES INTERFACE COMPLIANCE
     @Override
     public void onAttach(Activity activity) { 
         super.onAttach(activity);
         
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
         try {
-            activityCallback = (OnButtonPush) activity;
+            activityCallback = (FragOneInterface) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
+                    + " must implement OnButtonPush");
         }
+        
     }
 
-    //setting button listeners
+    //THIS SECTION SETS BUTTON LISTENERS
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        
+		//INFLATE THE LAYOUT FOR THIS FRAGMENT
         View rootView = inflater.inflate(R.layout.fragment_one, container, false);
         
-        //set button click listeners
-        button = (Button) rootView.findViewById(R.id.main_button);
-        button.setOnClickListener(this); 
+        //SET BUTTON CLICK LISTENERS
+        mainButton = (Button) rootView.findViewById(R.id.main_button);
+        mainButton.setOnClickListener(this); 
         
         return rootView;
     }
 	
-	//this section is activated when a click event happens
+	//THIS SECTION IS ACTIVATED WHEN A BUTTON IS CLICKED
 	@Override  
     public void onClick(View v) { 
+		
 		switch (v.getId()) {
 		
 		//adding cases for different BUTTON ids
 	    case R.id.main_button:
-	    	activityCallback.onButtonPush("onClick TEST");
+	    	activityCallback.onButtonPush("FRAG onClick");
 	        break;
 	        
-	  }
+		}
+		
 		Log.i(EVENT, "BUTTON CLICKED");
     }
 	

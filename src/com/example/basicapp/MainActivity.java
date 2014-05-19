@@ -1,7 +1,6 @@
 package com.example.basicapp;
 
-import com.example.basicapp.FragmentOne.OnButtonPush;
-
+import com.example.basicapp.FragmentOne.FragOneInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,13 +11,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 
-public class MainActivity extends FragmentActivity implements OnButtonPush {
+public class MainActivity extends FragmentActivity implements FragOneInterface {
 
     private static final String LIFECYCLE = "LifeCycle";
     private static final String EVENT = "Event";
 	
-   /*
+   /* _____________________________
+    * 
     * LIFECYCLE CREATION PATH
+    * _____________________________
     
     ***CREATION***
 	onCreate
@@ -36,11 +37,13 @@ public class MainActivity extends FragmentActivity implements OnButtonPush {
     
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         Log.i(LIFECYCLE, "onCreate");
         
-        //SETTING FRAGMENT VIEW
+        //SETTING ROOT VIEW
+        setContentView(R.layout.activity_main);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        
+        //INJECTING FRAGMENTS INTO ROOT VIEW
         if (savedInstanceState != null) {
             return;
         }
@@ -51,20 +54,18 @@ public class MainActivity extends FragmentActivity implements OnButtonPush {
         transaction.add(R.id.main_container, firstFragment);	
         transaction.commit();
         Log.i(EVENT, "Fragment Commit Finished");
-         
+        
     }
 
     protected void onStart() {
 		super.onStart();
 		Log.i(LIFECYCLE, "onStart");
-		//setHint("setHint text");
 		
 	}
 	
 	protected void onResume() {
 		super.onResume();
 		Log.i(LIFECYCLE, "onResume");
-		
 		
 	}
 	
@@ -74,13 +75,11 @@ public class MainActivity extends FragmentActivity implements OnButtonPush {
 		super.onPause();
 		Log.i(LIFECYCLE, "onPause");
 		
-		
 	}
 	
 	protected void onStop() {
 		super.onStop();
 		Log.i(LIFECYCLE, "onStop");
-		
 		
 	}
 	
@@ -88,13 +87,11 @@ public class MainActivity extends FragmentActivity implements OnButtonPush {
 		super.onRestart();
 		Log.i(LIFECYCLE, "onRestart");
 		
-		
 	}
 
 	protected void onDestroy() {
 		super.onDestroy();
 		Log.i(LIFECYCLE, "onDestroy");
-		
 		
 	}
 
@@ -102,36 +99,19 @@ public class MainActivity extends FragmentActivity implements OnButtonPush {
 		super.onSaveInstanceState(outState);
 		Log.i(LIFECYCLE, "onSaveInstanceState");
 		
-		final EditText textBox = (EditText) findViewById(R.id.main_text);
+		EditText textBox = (EditText) findViewById(R.id.main_text);
 		CharSequence userText = textBox.getHint();
 		outState.putCharSequence("savedText", userText);
 		
-		/*
-		 * AN EXTRA BLOCK FOR PUTTING TEXT - REPLACE textBoxName WITH ID NAME
-		
-		textBox = (EditText) findViewById(R.id.textBoxName);
-		userText = textBox.getText();
-		outState.putCharSequence("savedText", userText);
-		
-		*/
-
 	}
 	
 	protected void onRestoreInstanceState(Bundle savedState) {	//CALLED AFTER onStart USUALLY DURING ORIENTATION TRANSITION
 		Log.i(LIFECYCLE, "onRestoreInstanceState");
 		
-		final EditText textBox = (EditText) findViewById(R.id.main_text);
+		EditText textBox = (EditText) findViewById(R.id.main_text);
 		CharSequence userText = savedState.getCharSequence("savedText");
 		textBox.setHint(userText);
-		
-		/*
-		 * AN EXTRA BLOCK FOR GETTING TEXT - REPLACE textBoxName WITH ID NAME
-		
-		textBox = (EditText) findViewById(R.id.textBoxName);
-		userText = savedState.getCharSequence("savedText");
-		textBox.setText(userText);
-		
-		 */
+
 	}
     
    /* ____________________________________________
@@ -140,41 +120,33 @@ public class MainActivity extends FragmentActivity implements OnButtonPush {
 	* ____________________________________________
     */
 	
+	//THIS AREA SPECIFIES THE MENU LAYOUT FILE
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		Log.i(EVENT, "MENU CREATED");
+		
 		return true;
 	}
 
+	//THIS AREA HANDLES MENU BUTTON CLICK EVENTS
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		
-		int id = item.getItemId();
-		//ADD MENU OPTION EFFECTS
+		switch (item.getItemId()) {
 		
-		if (id == R.id.settings_button) {
-			EditText textBox = (EditText) findViewById(R.id.main_text);
+		//adding cases for different BUTTON ids
+	    case R.id.settings_button:
+	    	EditText textBox = (EditText) findViewById(R.id.main_text);
 			textBox.setHint("Settings Pressed");
 			Log.i(EVENT, "SETTINGS PRESSED");
-			return true;
+	        break;
+	        
 		}
-		
-		/*
-		 * AN EXTRA BLOCK FOR MENU OPTION EFFECTS - REPLACE buttonID WITH ID NAME
-		
-		if (id == R.id.buttonID) {
-			return true;
-		}
-		
-		*/
 		
 		return super.onOptionsItemSelected(item);
-
 	}
 	
    /* ____________________________________________
@@ -183,18 +155,24 @@ public class MainActivity extends FragmentActivity implements OnButtonPush {
 	* ____________________________________________
 	*/
 	
-	public void textHint(String string) {
+	public void setTextHint(String string) {
+		
 		EditText textBox = (EditText) findViewById(R.id.main_text);
 		textBox.setHint(string);
 		Log.i(EVENT, "Activity setHint() complete");
+		
 	}
 	
     public void onButtonPush(String string) {
-    	textHint(string);
+    	
+    	setTextHint(string);
+    	
 	}
     
     public void onButtonPush(int integer) {
-    	textHint("" + integer);
+    	
+    	setTextHint("" + integer);
+    	
 	}
     
 	
