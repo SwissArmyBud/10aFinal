@@ -1,8 +1,10 @@
 package com.example.basicapp;
 
 import com.example.basicapp.HomeFragment.HomeFragmentInterface;
+import com.example.basicapp.LogViewFragment.LogViewInterface;
+import com.example.basicapp.LogViewMenuFrag.LogViewMenuFragInterface;
 import com.example.basicapp.ProcessRecordMenuFrag.ProcessRecordMenuFragInterface;
-import com.example.basicapp.RecordProcessFragment.RecordProcessFragInterface;
+import com.example.basicapp.ProcessRecordFragment.RecordProcessFragInterface;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,9 +15,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-public class MainActivity extends FragmentActivity implements HomeFragmentInterface, RecordProcessFragInterface, ProcessRecordMenuFragInterface {
+public class MainActivity extends FragmentActivity implements HomeFragmentInterface, RecordProcessFragInterface, ProcessRecordMenuFragInterface, LogViewInterface, LogViewMenuFragInterface {
 
-    private static final String LIFECYCLE = "LifeCycle";
+	private static Record[] washLog = {new Record(), new Record(), new Record()};
+	private static final String LIFECYCLE = "LifeCycle";
     private static final String EVENT = "Event";
 	
    /* _____________________________
@@ -185,7 +188,7 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         
 		//SETUP THE RECORD AND MENU FRAGMENTS
-        RecordProcessFragment recordFrag = new RecordProcessFragment();	
+        ProcessRecordFragment recordFrag = new ProcessRecordFragment();	
         ProcessRecordMenuFrag recordMenuFrag = new ProcessRecordMenuFrag();	
         recordFrag.setArguments(getIntent().getExtras());	
         recordMenuFrag.setArguments(getIntent().getExtras());	
@@ -199,8 +202,22 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
 	
 	@Override
 	public void homeViewLogButton() {
-		// TODO Auto-generated method stub
 		Log.i(EVENT, "HomeFragment viewLog push method in MainActivity");
+		
+		//SETUP THE TRANSACTION MANAGER
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        
+		//SETUP THE RECORD AND MENU FRAGMENTS
+        LogViewFragment logFrag = new LogViewFragment();	
+        LogViewMenuFrag logMenuFrag = new LogViewMenuFrag();	
+        logFrag.setArguments(getIntent().getExtras());	
+        logMenuFrag.setArguments(getIntent().getExtras());	
+        
+        //ADD THE LOG FRAGMENT TO THE TOP FRAME AND THE LOG MENU TO THE BOTTOM FRAME
+        transaction.replace(R.id.main_top_frame, logFrag, "LogFrag");
+        transaction.add(R.id.main_bottom_frame, logMenuFrag, "LogMenuFrag");
+        transaction.addToBackStack(null);
+        transaction.commit();
 	}
 
 	@Override
@@ -212,7 +229,8 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
 	@Override
 	public void commitRecordButtonPush() {
 		
-		RecordProcessFragment recordFrag = (RecordProcessFragment) getSupportFragmentManager().findFragmentByTag("RecordFrag");
+		ProcessRecordMenuFrag recordMenuFrag = (ProcessRecordMenuFrag) getSupportFragmentManager().findFragmentByTag("RecordMenuFrag");
+		ProcessRecordFragment recordFrag = (ProcessRecordFragment) getSupportFragmentManager().findFragmentByTag("RecordFrag");
 		String string = recordFrag.getRecord("");
 		Log.i(EVENT, string);
 		
@@ -230,11 +248,61 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
         homeFrag.setArguments(getIntent().getExtras());		
         
         transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
-        transaction.remove(recordFrag);
+        transaction.remove(recordMenuFrag);
         transaction.addToBackStack(null);
         transaction.commit();
 		
 	}
-    
+
+	@Override
+	public void viewLogEntry(int i) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void logCancel() {
+		Log.i(EVENT, "logCancel()");
+		LogViewMenuFrag logViewMenuFrag = (LogViewMenuFrag) getSupportFragmentManager().findFragmentByTag("LogMenuFrag");
+		
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        
+        HomeFragment homeFrag = new HomeFragment();		
+        homeFrag.setArguments(getIntent().getExtras());		
+        
+        transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
+        transaction.remove(logViewMenuFrag);
+        transaction.addToBackStack(null);
+        transaction.commit();
+	}
+
+	@Override
+	public void recordCancel() {
+		Log.i(EVENT, "recordCancel()");
+		ProcessRecordMenuFrag recordMenuFrag = (ProcessRecordMenuFrag) getSupportFragmentManager().findFragmentByTag("RecordMenuFrag");
+		
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        
+        HomeFragment homeFrag = new HomeFragment();		
+        homeFrag.setArguments(getIntent().getExtras());		
+        
+        transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
+        transaction.remove(recordMenuFrag);
+        transaction.addToBackStack(null);
+        transaction.commit();
+	}
+	
+	public static Record[] getCurrentLog () {
+		return washLog;
+	}
+	
+	public void addRecordToLog(Record record, Record[] washLog){
+
+        Record[] newArray = new Record[washLog.length+1];
+        System.arraycopy(washLog, 0, newArray, 0, washLog.length);
+    	newArray[newArray.length - 1] = record;
+    	this.washLog = newArray;
+        
+    }
 	
 }

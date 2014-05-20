@@ -10,20 +10,23 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
+import android.support.v4.app.FragmentActivity;
 
-	Button addButton;
-	Button resetButton;
-	Button cancelButton;
+public class LogViewMenuFrag extends Fragment implements OnClickListener {
+
+	Button homeButton;
+	Button viewButton;
+	Button editButton;
 
     private static final String EVENT = "Event";
 	
-    ProcessRecordMenuFragInterface activityCallback;
+    LogViewMenuFragInterface activityCallback;
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
-    public interface ProcessRecordMenuFragInterface {
-        public void commitRecordButtonPush();
-        public void recordCancel();
+    public interface LogViewMenuFragInterface {
+        public void updateStatus(String string);
+        public void viewLogEntry(int i);
+        public void logCancel();
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -32,10 +35,10 @@ public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
         super.onAttach(activity);
         
         try {
-            activityCallback = (ProcessRecordMenuFragInterface) activity;
+            activityCallback = (LogViewMenuFragInterface) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement ProcessRecordMenuFragInterface");
+                    + " must implement LogViewMenuFragInterface");
         }
         
     }
@@ -45,15 +48,15 @@ public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
-        View rootView = inflater.inflate(R.layout.process_record_menu, container, false);
+        View rootView = inflater.inflate(R.layout.log_view_menu, container, false);
         
         //SET BUTTON CLICK LISTENERS
-        cancelButton = (Button) rootView.findViewById(R.id.record_cancel);
-        cancelButton.setOnClickListener(this); 
-        addButton = (Button) rootView.findViewById(R.id.commit_record_button);
-        addButton.setOnClickListener(this); 
-        resetButton = (Button) rootView.findViewById(R.id.reset_record_button);
-        resetButton.setOnClickListener(this); 
+        homeButton = (Button) rootView.findViewById(R.id.log_menu_cancel);
+        homeButton.setOnClickListener(this); 
+        viewButton = (Button) rootView.findViewById(R.id.log_menu_view);
+        viewButton.setOnClickListener(this); 
+        editButton = (Button) rootView.findViewById(R.id.log_menu_edit);
+        editButton.setOnClickListener(this); 
         
         return rootView;
     }
@@ -65,15 +68,15 @@ public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		
 		//adding cases for different BUTTON ids
-    case R.id.commit_record_button:
-    	activityCallback.commitRecordButtonPush();
+    case R.id.log_menu_cancel:
+    	activityCallback.logCancel();
         break;
-    case R.id.reset_record_button:
-    	resetFields();
+    case R.id.log_menu_view:
+    	activityCallback.viewLogEntry(5);
         break;
-    case R.id.record_cancel:
-    	activityCallback.recordCancel();
-    	break;
+    case R.id.log_menu_edit:
+    	activityCallback.updateStatus("MENU EDIT");
+        break;
 	}
 		
 		Log.i(EVENT, "BUTTON CLICKED");
