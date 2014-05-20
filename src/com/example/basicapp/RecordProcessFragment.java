@@ -19,7 +19,7 @@ public class RecordProcessFragment extends Fragment {
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
     public interface RecordProcessFragInterface {
-        public void addRecord(String string);
+        public void updateStatus(String string);
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -43,6 +43,8 @@ public class RecordProcessFragment extends Fragment {
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
         View rootView = inflater.inflate(R.layout.fragment_record_modify, container, false);
         
+        activityCallback.updateStatus("***Adding Record***");
+        
         return rootView;
     }
 	
@@ -59,8 +61,8 @@ public class RecordProcessFragment extends Fragment {
 		Log.i(EVENT, "RecordProcessFragment setFields complete");
 	}
 	
-	private String makeRecord(String string) {
-		return "";
+	public String getRecord(String string) {
+		return "RecordProcessFragment getRecord";
 	}
 	
 }

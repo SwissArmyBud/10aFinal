@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class HomeFragment extends Fragment implements OnClickListener {
 
@@ -19,7 +18,6 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	Button saveLogButton;
 	
     private static final String EVENT = "Event";
-    private static final String LIFECYCLE = "LifeCycle";
 	
     HomeFragmentInterface activityCallback;
 

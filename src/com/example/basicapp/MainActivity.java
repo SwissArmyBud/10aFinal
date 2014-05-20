@@ -179,22 +179,22 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
 
 	@Override
 	public void homeAddRecordButtonPush() {
-		// TODO Auto-generated method stub
 		Log.i(EVENT, "HomeFragment addRecord push method in MainActivity");
 		
+		//SETUP THE TRANSACTION MANAGER
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         
+		//SETUP THE RECORD AND MENU FRAGMENTS
         RecordProcessFragment recordFrag = new RecordProcessFragment();	
         ProcessRecordMenuFrag recordMenuFrag = new ProcessRecordMenuFrag();	
         recordFrag.setArguments(getIntent().getExtras());	
         recordMenuFrag.setArguments(getIntent().getExtras());	
         
+        //ADD THE RECORD FRAGMENT TO THE TOP FRAME AND THE RECORD MENU TO THE BOTTOM FRAME
         transaction.replace(R.id.main_top_frame, recordFrag, "RecordFrag");
         transaction.add(R.id.main_bottom_frame, recordMenuFrag, "RecordMenuFrag");
         transaction.addToBackStack(null);
         transaction.commit();
-        
-        updateStatus("*** ADDING RECORD ***");
 	}
 	
 	@Override
@@ -210,14 +210,29 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
 	}
 
 	@Override
-	public void addRecord(String string) {
-		// TODO Auto-generated method stub
-		Log.i(EVENT, "RecordProcessFragment addRecord method in MainActivity");
-	}
-
-	@Override
-	public void addRecordButtonPush() {
-		// TODO Auto-generated method stub
+	public void commitRecordButtonPush() {
+		
+		RecordProcessFragment recordFrag = (RecordProcessFragment) getSupportFragmentManager().findFragmentByTag("RecordFrag");
+		String string = recordFrag.getRecord("");
+		Log.i(EVENT, string);
+		
+		//
+		//
+		//TODO
+		//THIS IS WHERE THE LOGIC FOR CREATING AND STORING THE RECORD INTO THE WASHLOG GOES
+		//
+		//
+		//
+		
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        
+        HomeFragment homeFrag = new HomeFragment();		
+        homeFrag.setArguments(getIntent().getExtras());		
+        
+        transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
+        transaction.remove(recordFrag);
+        transaction.addToBackStack(null);
+        transaction.commit();
 		
 	}
     

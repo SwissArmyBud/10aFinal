@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 
 public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
 
@@ -22,7 +21,7 @@ public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
     public interface ProcessRecordMenuFragInterface {
-        public void addRecordButtonPush();
+        public void commitRecordButtonPush();
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -63,7 +62,7 @@ public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
 		
 		//adding cases for different BUTTON ids
     case R.id.commit_record_button:
-    	activityCallback.addRecordButtonPush();
+    	activityCallback.commitRecordButtonPush();
         break;
     case R.id.reset_record_button:
     	resetFields();
