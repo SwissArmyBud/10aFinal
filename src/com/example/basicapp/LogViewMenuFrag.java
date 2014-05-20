@@ -10,8 +10,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import android.support.v4.app.FragmentActivity;
-
 public class LogViewMenuFrag extends Fragment implements OnClickListener {
 
 	Button homeButton;

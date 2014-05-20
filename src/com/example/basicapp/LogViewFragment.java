@@ -1,8 +1,5 @@
 package com.example.basicapp;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 
 public class LogViewFragment extends Fragment {
@@ -51,17 +47,20 @@ public class LogViewFragment extends Fragment {
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
         View rootView = inflater.inflate(R.layout.log_view_fragment, container, false);
         
-        // Get the reference of ListView
+        //GET THE REFERENCE TO LISTVIEW
         listView = (ListView) rootView.findViewById(R.id.log_list_view);
         
+        //INITIALIZE AND ATTACH A LISTVIEW ADAPTER TO LISTVIEW
         final ListAdapter adapter = new ListAdapter(getActivity(), R.layout.record_list_row, MainActivity.getCurrentLog());
-         listView.setAdapter(adapter);
-         // register onClickListener to handle click events on each item
-         listView.setOnItemClickListener(new OnItemClickListener()
+        listView.setAdapter(adapter);
+        
+        //LISTVIEW OnClick LISTENER FOR CLICK EVENTS
+        listView.setOnItemClickListener(new OnItemClickListener()
             {
-                     // argument position gives the index of item which is clicked
+                    // argument position gives the index of item which is clicked
                     public void onItemClick(AdapterView<?> arg0, View v,int position, long arg3){
                     	Log.i(EVENT, "listView item " + position + " clicked");
+                        activityCallback.updateStatus("***LOG VIEW ITEM " + position + " CLICKED***");
                     }
                     
             });
@@ -76,9 +75,5 @@ public class LogViewFragment extends Fragment {
 	*	THIS AREA IS FOR ADDING SUPPORTING METHODS
 	* ____________________________________________
     */
-	
-	public void displayRecord(int i) {
-		
-	}
 	
 }

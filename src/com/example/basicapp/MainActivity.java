@@ -296,12 +296,12 @@ public class MainActivity extends FragmentActivity implements HomeFragmentInterf
 		return washLog;
 	}
 	
-	public void addRecordToLog(Record record, Record[] washLog){
+	public Record[] addRecordToLog(Record record, Record[] washLog){
 
         Record[] newArray = new Record[washLog.length+1];
         System.arraycopy(washLog, 0, newArray, 0, washLog.length);
     	newArray[newArray.length - 1] = record;
-    	this.washLog = newArray;
+    	return newArray;
         
     }
 	
