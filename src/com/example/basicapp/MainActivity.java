@@ -181,16 +181,14 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 	public void homeAddRecordButtonPush() {
 		Log.i(EVENT, "MainActivity homeAddRecordButtonPush()");
 		
-		//SETUP THE TRANSACTION MANAGER
+		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         
-		//SETUP THE RECORD AND MENU FRAGMENTS
         ProcessRecordFragment recordFrag = new ProcessRecordFragment();	
         ProcessRecordMenuFrag recordMenuFrag = new ProcessRecordMenuFrag();	
         recordFrag.setArguments(getIntent().getExtras());	
         recordMenuFrag.setArguments(getIntent().getExtras());	
         
-        //ADD THE RECORD FRAGMENT TO THE TOP FRAME AND THE RECORD MENU TO THE BOTTOM FRAME
         transaction.replace(R.id.main_top_frame, recordFrag, "RecordFrag");
         transaction.add(R.id.main_bottom_frame, recordMenuFrag, "RecordMenuFrag");
         transaction.addToBackStack(null);
@@ -256,7 +254,7 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 
 	@Override
 	public void logCancel() {
-		Log.i(EVENT, "logCancel()");
+		Log.i(EVENT, "MainActivity logCancel()");
 		
 		//FIND THE MENU FRAGMENT AND OBTAIN A REFERENCE SO IT CAN BE REMOVED IN THE FRAGMENT TRANSITION
 		LogViewMenuFrag logViewMenuFrag = (LogViewMenuFrag) getSupportFragmentManager().findFragmentByTag("LogMenuFrag");
@@ -276,7 +274,7 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 
 	@Override
 	public void recordCancel(boolean edit) {
-		Log.i(EVENT, "recordCancel()");
+		Log.i(EVENT, "MainActivity recordCancel()");
 		
 		//FIND THE MENU FRAGMENT AND OBTAIN A REFERENCE SO IT CAN BE REMOVED IN THE FRAGMENT TRANSITION
 		ProcessRecordMenuFrag recordMenuFrag = (ProcessRecordMenuFrag) getSupportFragmentManager().findFragmentByTag("RecordMenuFrag");
@@ -296,7 +294,7 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 	
 	@Override
 	public void editCancel() {
-		Log.i(EVENT, "recordCancel()");
+		Log.i(EVENT, "MainActivity recordCancel()");
 		
 		//FIND THE MENU FRAGMENT AND OBTAIN A REFERENCE SO IT CAN BE REMOVED IN THE FRAGMENT TRANSITION
 		ProcessRecordEditMenuFrag recordMenuFrag = (ProcessRecordEditMenuFrag) getSupportFragmentManager().findFragmentByTag("RecordMenuFrag");
@@ -321,13 +319,30 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 		return washLog;
 	}
 	
-	public void addRecordToLog(Record record){
+	public void addRecordToLog(Record record, int selection){
 		Log.i(EVENT, "MainActivity addRecordToLog()");
+		
+		if (selection == -1) {
+			//GROW THE WASH LOG AND ADD THE SUPPLIED RECORD TO THE END
+			Record[] newArray = new Record[washLog.length+1];
+			System.arraycopy(washLog, 0, newArray, 0, washLog.length);
+			newArray[newArray.length - 1] = record;
+			washLog = newArray; 
+			return;
+		}
+		else if (selection > -1) {
+			washLog[selection] = record;
+		}
+		else {Log.i(EVENT, "MainActivity addRecordToLog selection BAD RESULT");}
+    }
+	
+	public void addHeadersToLog(){
+		Log.i(EVENT, "MainActivity addHeadersToLog()");
 
-		//GROW THE WASH LOG AND ADD THE SUPPLIED RECORD TO THE END
+		//GROW THE WASH LOG AND ADD A DEFAULT RECORD AT THE HEAD, THEREBY CREATING HEADERS FOR THE CSV FILE
         Record[] newArray = new Record[washLog.length+1];
-        System.arraycopy(washLog, 0, newArray, 0, washLog.length);
-    	newArray[newArray.length - 1] = record;
+        System.arraycopy(washLog, 0, newArray, 1, washLog.length);
+    	newArray[0] = new Record();
     	washLog = newArray;        
     }
 
@@ -427,5 +442,17 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
     	washLog[selection] = record;
     
 	}
-	
+
+	@Override
+	public boolean selectionTrue() {
+		Log.i(EVENT, "MainActivity selectionTrue()");
+		//FIND THE LOG FRAGMENT WHILE IT IS STILL RUNNING AND EXTRACT THE SELECTION VALUE
+		LogViewFragment logViewFrag = (LogViewFragment) getSupportFragmentManager().findFragmentByTag("LogFrag");
+		
+		//TEST THE SELECTION VALUE OF THE LOG FRAGMENT AND RETURN A BOOLEAN BASED ON THE VALUE
+		if (logViewFrag.hasSelection() > -1){
+			return true;
+		}
+		else {return false;}
+	}
 }

@@ -1,5 +1,7 @@
 package com.example.basicapp;
 
+import com.example.basicapp.R.color;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,7 +23,7 @@ public class LogViewFragment extends Fragment {
     ListView listView;  
     ArrayAdapter<String> listAdapter ;
     View lastTouchedView;
-    public static int lastPos = -1;
+    private int lastPos = -1;
 
     LogUpdateStatus activityCallback;
 
@@ -48,6 +50,7 @@ public class LogViewFragment extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(LIFE, "LogViewFragment onCreateView()");
+        Log.i(EVENT, "selection variable = " + lastPos);
         
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
         View rootView = inflater.inflate(R.layout.log_view_fragment, container, false);
@@ -79,7 +82,7 @@ public class LogViewFragment extends Fragment {
                         }
                         //OTHERWISE MAKE THE BUTTONS BACKGROUND A DIFFERENT COLOR AND STORE ITS POSITION USING lastPos
                         else {
-                        	v.setBackgroundColor(Color.CYAN);
+                        	v.setBackgroundColor(color.AliceBlue);
                         	Log.i(EVENT, "v not equal");
                         	lastPos = newPos;
                         }
