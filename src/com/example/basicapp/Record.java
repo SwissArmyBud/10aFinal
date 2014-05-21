@@ -28,7 +28,18 @@ public class Record {
     	this.notes = notes;
     }
 
-    public String getVinRecord() {
+    public Record(String vin, int miles, int gasLevel, double gasPumped, String employeeNumber, int inspectionResults, int smokeOrPets, String notes) {
+    		this.vin = vin;
+	    	this.miles = "" + miles;
+	    	this.gasLevel = "" + gasLevel;
+	    	this.gasPumped = "" + gasPumped;
+	    	this.employeeNumber = employeeNumber;
+	    	this.inspectionResults = inspectionResultConverter(inspectionResults);
+	    	this.smokeOrPets = smokeOrPetsConverter(smokeOrPets);
+	    	this.notes = notes;
+	    }
+
+	public String getVinRecord() {
         return vin;
     }
 
@@ -62,10 +73,10 @@ public class Record {
     
     public String inspectionResultConverter(int result) {
         if (result == 1) {
-            return "Y";
+            return "Yes";
         }
         else if (result == 2) {
-            return "N";
+            return "No";
         }
         else if (result == 3) {
             return "DX";
@@ -99,5 +110,6 @@ public class Record {
         }
         else {return "?";}
     }
+
 
 }

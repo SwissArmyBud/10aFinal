@@ -1,6 +1,7 @@
 package com.example.basicapp;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,58 +16,78 @@ import android.widget.ListView;
 public class LogViewFragment extends Fragment {
 
     private static final String EVENT = "Event";
+    private static final String LIFE = "LifeCycle";
+    
     ListView listView;  
-    ArrayAdapter<String> listAdapter ;  
-    LogViewInterface activityCallback;
+    ArrayAdapter<String> listAdapter ;
+    View lastTouchedView;
+    public static int lastPos = -1;
+
+    LogUpdateStatus activityCallback;
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
-    public interface LogViewInterface {
-        public void viewLogEntry(int i);
-		public void updateStatus(String string);
+    public interface LogUpdateStatus {
+        public void updateStatus(String string);
     }
-    
 
-    //THIS SECTION ENSURES INTERFACE COMPLIANCE
+	//THIS SECTION ENSURES INTERFACE COMPLIANCE
     @Override
     public void onAttach(Activity activity) { 
         super.onAttach(activity);
+		Log.i(LIFE, "ProcessRecordFragment onAttach");
         
         try {
-            activityCallback = (LogViewInterface) activity;
+            activityCallback = (LogUpdateStatus) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnButtonPush");
+                    + " must implement UpdateStatus Interface");
         }
-        
     }
 
     //THIS SECTION SETS BUTTON LISTENERS
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i(LIFE, "LogViewFragment onCreateView()");
         
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
         View rootView = inflater.inflate(R.layout.log_view_fragment, container, false);
         
-        //GET THE REFERENCE TO LISTVIEW
+        //GET AND ATTACH A ListViewAdapter TO listView
         listView = (ListView) rootView.findViewById(R.id.log_list_view);
-        
-        //INITIALIZE AND ATTACH A LISTVIEW ADAPTER TO LISTVIEW
         final ListAdapter adapter = new ListAdapter(getActivity(), R.layout.record_list_row, MainActivity.getCurrentLog());
         listView.setAdapter(adapter);
         
         //LISTVIEW OnClick LISTENER FOR CLICK EVENTS
         listView.setOnItemClickListener(new OnItemClickListener()
             {
-                    // argument position gives the index of item which is clicked
+                    //THE position VARIABLE GIVES POSITION OF CLICKED ITEM IN LIST VIEW, STARTING WITH --> TOP ROW = 0
                     public void onItemClick(AdapterView<?> arg0, View v,int position, long arg3){
                     	Log.i(EVENT, "listView item " + position + " clicked");
                         activityCallback.updateStatus("***LOG VIEW ITEM " + position + " CLICKED***");
+                        
+                        //SET ALL THE BACKGROUND COLORS TO THE SAME COLOR
+                        int newPos = position;
+                        for (int i=0;i<listView.getChildCount();i++){
+                            listView.getChildAt(i).setBackgroundColor(Color.WHITE);
+                        }
+                        
+                        //IF SAME ITEM IS CLICKED AS LAST TIME, MAKE IT WHITE TOO THEN REVERT THE lastPos VALUE TO -1
+                        if (newPos==lastPos) {
+                        	v.setBackgroundColor(Color.WHITE);
+                        	lastPos = -1;
+                        	Log.i(EVENT, "v equal");
+                        }
+                        //OTHERWISE MAKE THE BUTTONS BACKGROUND A DIFFERENT COLOR AND STORE ITS POSITION USING lastPos
+                        else {
+                        	v.setBackgroundColor(Color.CYAN);
+                        	Log.i(EVENT, "v not equal");
+                        	lastPos = newPos;
+                        }
                     }
                     
             });
         
-        activityCallback.updateStatus("***LOG VIEW***");
-        
+        //RETURN THE VIEW
         return rootView;
     }
 	
@@ -75,5 +96,10 @@ public class LogViewFragment extends Fragment {
 	*	THIS AREA IS FOR ADDING SUPPORTING METHODS
 	* ____________________________________________
     */
-	
+	public int hasSelection() {
+		Log.i(EVENT, "hasSelection: " + lastPos);
+		if (lastPos>-1) {
+			return lastPos;
+		} else {return -1;}
+	}
 }

@@ -7,50 +7,53 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class ProcessRecordFragment extends Fragment implements OnSeekBarChangeListener {
 
-	SeekBar seekbar;
     private static final String EVENT = "Event";
+    private static final String LIFE = "LifeCycle";
+    
+	Record[] washLog;
+	SeekBar seekbar;
+	int selection;
 	
-    RecordProcessFragInterface activityCallback;
+    UpdateStatus activityCallback;
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
-    public interface RecordProcessFragInterface {
+    public interface UpdateStatus {
         public void updateStatus(String string);
     }
 
-    //THIS SECTION ENSURES INTERFACE COMPLIANCE
+	//THIS SECTION ENSURES INTERFACE COMPLIANCE
     @Override
     public void onAttach(Activity activity) { 
         super.onAttach(activity);
+		Log.i(LIFE, "ProcessRecordFragment onAttach");
         
         try {
-            activityCallback = (RecordProcessFragInterface) activity;
+            activityCallback = (UpdateStatus) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement RecordProcessFrag Interface");
+                    + " must implement UpdateStatus Interface");
         }
-        
     }
 
     //THIS SECTION SETS BUTTON LISTENERS
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.i(LIFE, "ProcessRecordFragment onCreateView");
         
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
         View rootView = inflater.inflate(R.layout.process_record_fragment, container, false);
         
-        //SET BUTTON CLICK LISTENERS
+        //SET SEEK LISTENER
         seekbar = (SeekBar) rootView.findViewById(R.id.gas_seek_bar);
 	    seekbar.setOnSeekBarChangeListener(this);
-	   
-        activityCallback.updateStatus("***Adding Record***");
-        
+	    
+	    //RETURN THE VIEW
         return rootView;
     }
 	
@@ -60,36 +63,29 @@ public class ProcessRecordFragment extends Fragment implements OnSeekBarChangeLi
 	* ____________________________________________
     */
 	
-	public void setFields(String string) {
-		View rootView = getView().findViewById(R.id.main_text);
-		EditText textBox = (EditText) rootView.findViewById(R.id.main_text);
-		textBox.setHint(string);
-		Log.i(EVENT, "RecordProcessFragment setFields complete");
-	}
-	
-	public String getRecord(String string) {
-		return "RecordProcessFragment getRecord";
-	}
-
+	//REQUIRED METHOD FROM SCROLL HANDLER
 	@Override
-	public void onProgressChanged(SeekBar seekBar, int progress,
-			boolean fromUser) {
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+		Log.i(EVENT, "seekBarListener update: " + progress);
+		
 		View rootView = getView().findViewById(R.id.gas_text_box);
 		TextView textBox = (TextView) rootView.findViewById(R.id.gas_text_box);
 		textBox.setText("" + progress + "/8");
-		Log.i(EVENT, "seekBarListener update: " + progress);
 		
 	}
-
-	@Override
+	
+	//REQUIRED METHOD FROM SCROLL HANDLER
+	@Override  
 	public void onStartTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-		
+		Log.i(EVENT, "seekBarListener onStartTrackingTouch");
+		//NO USE FOR THIS METHOD SO FAR
 	}
 
+	//REQUIRED METHOD FROM SCROLL HANDLER
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
+		Log.i(EVENT, "seekBarListener onStopTrackingTouch");
+		//NO USE FOR THIS METHOD SO FAR
 		
 	}
 }

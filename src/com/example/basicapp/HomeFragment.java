@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 
 public class HomeFragment extends Fragment implements OnClickListener {
 
@@ -18,6 +17,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	Button saveLogButton;
 	
     private static final String EVENT = "Event";
+    private static final String LIFE = "LifeCycle";
 	
     HomeFragmentInterface activityCallback;
 
@@ -33,6 +33,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
     @Override
     public void onAttach(Activity activity) { 
         super.onAttach(activity);
+		Log.i(LIFE, "HomeFragment onAttach");
         
         try {
             activityCallback = (HomeFragmentInterface) activity;
@@ -40,12 +41,12 @@ public class HomeFragment extends Fragment implements OnClickListener {
             throw new ClassCastException(activity.toString()
                     + " must implement OnButtonPush");
         }
-        
     }
 
     //THIS SECTION SETS BUTTON LISTENERS
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.i(LIFE, "HomeFragment onCreateView");
         
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
         View rootView = inflater.inflate(R.layout.home_fragment, container, false);
@@ -56,17 +57,16 @@ public class HomeFragment extends Fragment implements OnClickListener {
         viewLogButton = (Button) rootView.findViewById(R.id.view_log_button);
         viewLogButton.setOnClickListener(this); 
         saveLogButton = (Button) rootView.findViewById(R.id.save_log_button);
-        saveLogButton.setOnClickListener(this); 
-        Log.i(EVENT, "HomeFragment button click listeners set");
-
-    	activityCallback.updateStatus("***HOME SCREEN***");
-        
+        saveLogButton.setOnClickListener(this);
+    	
+        //RETURN THE VIEW
         return rootView;
     }
 	
 	//THIS SECTION IS ACTIVATED WHEN A BUTTON IS CLICKED
 	@Override  
     public void onClick(View v) { 
+		Log.i(LIFE, "HomeFragment onClick");
 		
 		switch (v.getId()) {
 		
@@ -79,9 +79,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	    	Log.i(EVENT, "HomeFrag calling viewLog()");
 	    	activityCallback.homeViewLogButton();
 	        break;
-	    case R.id.save_log_button:
-	    	Log.i(EVENT, "HomeFrag calling viewLog()");
-	    	activityCallback.homeSaveLogButton();
+	    case R.id.save_log_button: //TODO
 	        break;
 	        
 		}
@@ -93,11 +91,5 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	*	THIS AREA IS FOR ADDING SUPPORTING METHODS
 	* ____________________________________________
     */
-	
-	public void setHint(String string) {
-		View rootView = getView().findViewById(R.id.main_text);
-		EditText textBox = (EditText) rootView.findViewById(R.id.main_text);
-		textBox.setHint(string);
-	}
 	
 }

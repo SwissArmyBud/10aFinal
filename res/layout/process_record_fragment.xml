@@ -66,6 +66,7 @@
             android:layout_weight="1"
             android:indeterminate="false"
             android:max="8"
+            android:paddingTop="5dp"
             android:progress="4" />
 
         <TextView
@@ -148,7 +149,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="false"
                 android:layout_centerHorizontal="true"
-                android:layout_centerInParent="false"
                 android:layout_centerVertical="false"
                 android:checkedButton="@integer/abc_max_action_buttons"
                 android:orientation="horizontal" >
@@ -158,19 +158,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
+                    android:enabled="true"
                     android:text="OK" />
 
                 <RadioButton
                     android:id="@+id/inspection_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checked="true"
                     android:text="No" />
 
                 <RadioButton
-                    android:id="@+id/radio2"
+                    android:id="@+id/inspection_dx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checked="true"
                     android:text="DX" />
+
             </RadioGroup>
 
         </RelativeLayout>

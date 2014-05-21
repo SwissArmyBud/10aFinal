@@ -12,7 +12,7 @@ public class ListAdapter extends ArrayAdapter<Record> {
  	    Context context;
  	    int layoutResourceId;
  	    Record[] washLog = null;
- 	 
+ 	
  	public ListAdapter(Context context, int layoutResourceId, Record[] data) {
  	        super(context, layoutResourceId, data);
  	        this.layoutResourceId = layoutResourceId;
@@ -37,14 +37,79 @@ public class ListAdapter extends ArrayAdapter<Record> {
 	    TextView pumpedView = (TextView) convertView.findViewById(R.id.pumped_slot);
 	    TextView inspectionView = (TextView) convertView.findViewById(R.id.inspection_slot);
 	    TextView notesView = (TextView) convertView.findViewById(R.id.notes_slot);
-
+	    
+	    //ASSIGN A SIMPLE ANSWER FOR THE VIN RECORD
+	    Record record = new Record();
+	    String defaultString = record.getVinRecord();
+	    boolean defaultMatch = washLog[position].getVinRecord().equalsIgnoreCase(defaultString);
+	    boolean empty = washLog[position].getVinRecord().equalsIgnoreCase("");
+	    String status = "";
+	    if (defaultMatch == true | empty == true) {
+	    	status = "none";
+	    } else {status = washLog[position].getVinRecord();}
+	    //ASSIGN THE ANSWER TO THE TEXT HANDLER
+	    vinView.setText("VIN #: " + status);
+	    
+	    //ASSIGN A SIMPLE ANSWER FOR THE MILES RECORD
+	    defaultString = record.getMilesRecord();
+	    defaultMatch = washLog[position].getMilesRecord().equalsIgnoreCase(defaultString);
+	    empty = washLog[position].getMilesRecord().equalsIgnoreCase("");
+	    status = "";
+	    if (defaultMatch == true | empty == true) {
+	    	status = "n/a";
+	    } else {status = washLog[position].getMilesRecord();}
+	    //ASSIGN THE ANSWER TO THE TEXT HANDLER
+	    milesView.setText("Miles: " + status);
+	    
+	    //ASSIGN A SIMPLE ANSWER FOR THE GAS LEVEL RECORD
+	    defaultString = record.getGasLevelRecord();
+	    defaultMatch = washLog[position].getGasLevelRecord().equalsIgnoreCase(defaultString);
+	    empty = washLog[position].getGasLevelRecord().equalsIgnoreCase("");
+	    status = "";
+	    if (defaultMatch == true | empty == true) {
+	    	status = "n/a";
+	    } else {status = washLog[position].getGasLevelRecord() + "/8";}
+	    //ASSIGN THE ANSWER TO THE TEXT HANDLER
+	    fuelLevelView.setText("Gas Lvl: " + status);
+	    
+	    //ASSIGN A SIMPLE ANSWER FOR THE GAS PUMPED RECORD
+	    defaultString = record.getGasPumpedRecord();
+	    defaultMatch = washLog[position].getGasPumpedRecord().equalsIgnoreCase(defaultString);
+	    empty = washLog[position].getGasPumpedRecord().equalsIgnoreCase("");
+	    status = "";
+	    if (defaultMatch == true | empty == true) {
+	    	status = "0.00";
+	    } 
+	    else {status = washLog[position].getGasPumpedRecord();}
+	    //ASSIGN THE ANSWER TO THE TEXT HANDLER
+	    pumpedView.setText("Pumped: " + status);
+	    
+	    //ASSIGN A SIMPLE ANSWER FOR THE INSPECTION RECORD
+	    defaultString = record.getInspectionResultRecord();
+	    defaultMatch = washLog[position].getInspectionResultRecord().equalsIgnoreCase(defaultString);
+	    empty = washLog[position].getInspectionResultRecord().equalsIgnoreCase("");
+	    status = "";
+	    if (defaultMatch == true | empty == true) {
+	    	status = "n/a";
+	    } 
+	    else {status = washLog[position].getInspectionResultRecord();}
+	    //ASSIGN THE ANSWER TO THE TEXT HANDLER
+	    inspectionView.setText("Insp: " + status);
+	    
+	    //ASSIGN A SIMPLE ANSWER FOR THE NOTES RECORD
+	    defaultString = record.getNotesRecord();
+	    defaultMatch = washLog[position].getNotesRecord().equalsIgnoreCase(defaultString);
+	    empty = washLog[position].getNotesRecord().equalsIgnoreCase("");
+	    status = "";
+	    if (defaultMatch == true | empty == true) {
+	    	status = "No";
+	    } else {status = "Yes";}
+	    //ASSIGN THE ANSWER TO THE TEXT HANDLER
+	    notesView.setText("Notes: " + status);
+	    
+	   
+	    
 	    //ASSIGN ARRAY VALUES VIA VIEW MANAGERS
-	    vinView.setText(washLog[position].getVinRecord());
-	    milesView.setText(washLog[position].getMilesRecord());
-	    fuelLevelView.setText(washLog[position].getGasLevelRecord());
-	    pumpedView.setText(washLog[position].getGasPumpedRecord());
-	    inspectionView.setText(washLog[position].getInspectionResultRecord());
-	    notesView.setText(washLog[position].getNotesRecord());
 	    
 	    return convertView;
 	}

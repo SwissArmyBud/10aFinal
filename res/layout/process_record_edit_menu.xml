@@ -12,10 +12,10 @@
         android:text="Cancel" />
 
     <Button
-        android:id="@+id/commit_record_button"
+        android:id="@+id/save_record_button"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:text="Add Record" />
+        android:layout_weight="2"
+        android:text="Save Record" />
 
 </LinearLayout>
