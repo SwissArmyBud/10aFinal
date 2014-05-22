@@ -71,7 +71,7 @@ public class Record {
         return notes;
     }
     
-    public String inspectionResultConverter(int result) {
+    public static String inspectionResultConverter(int result) {
         if (result == 1) {
             return "Yes";
         }
@@ -84,18 +84,18 @@ public class Record {
         else {return "?";}
     }
 
-    public String gasLevelConverter(int level) {
+    public static String gasLevelConverter(int level) {
         return level + "/8";
     }
 
-    public String gasPumpedConverter(double pumped) {
+    public static String gasPumpedConverter(double pumped) {
         pumped = pumped * 100.0;
         pumped = (int) pumped;
         pumped = pumped / 100.0;
         return "" + pumped;
     }
 
-    public String smokeOrPetsConverter(int result){
+    public static String smokeOrPetsConverter(int result){
         if (result == 1) {
             return "OK";
         }

@@ -4,30 +4,27 @@ import com.example.basicapp.HomeFragment.HomeFragmentInterface;
 import com.example.basicapp.LogViewFragment.LogUpdateStatus;
 import com.example.basicapp.LogViewMenuFrag.LogViewMenuFragInterface;
 import com.example.basicapp.ProcessRecordEditMenuFrag.ProcessRecordEditMenuFragInterface;
-import com.example.basicapp.ProcessRecordFragment.UpdateStatus;
+import com.example.basicapp.ProcessRecordFragment.ProcessRecordFragInterface;
 import com.example.basicapp.ProcessRecordMenuFrag.ProcessRecordMenuFragInterface;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-public class MainActivity extends FragmentActivity implements ProcessRecordEditMenuFragInterface, HomeFragmentInterface, ProcessRecordMenuFragInterface, LogViewMenuFragInterface, UpdateStatus, LogUpdateStatus {
+public class MainActivity extends FragmentActivity implements ProcessRecordEditMenuFragInterface, HomeFragmentInterface, ProcessRecordMenuFragInterface, LogViewMenuFragInterface, ProcessRecordFragInterface, LogUpdateStatus {
 
 	private static final String LIFE = "LifeCycle";
     private static final String EVENT = "Event";
 	private static Record[] washLog = {
-		new Record("EP001654", 5600, 7, 0, "E863PB", 3, 4, "This car was fucked up. DX plus Smoke plus Pets."),
-    	new Record("ER109301", 12387, 2, 24.85, "E863PB", 1, 1, "This car was inspected and passed and had no smoke or pets."),
-    	new Record("S0F37110", 200, 8, 0, "E863PB", 2, 2, "This car was not damaged but did have smoke issues.")
+		//new Record("EP001654", 5600, 7, 0, "E863PB", 3, 4, "This car was fucked up. DX plus Smoke plus Pets."),
+    	//new Record("ER109301", 12387, 2, 24.85, "E863PB", 1, 1, "This car was inspected and passed and had no smoke or pets."),
+    	//new Record("S0F37110", 200, 8, 0, "E863PB", 2, 2, "This car was not damaged but did have smoke issues.")
 		};
+	private int lastSelection = -1;
 	
    /* _____________________________
     * 
@@ -183,12 +180,10 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 		
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        
         ProcessRecordFragment recordFrag = new ProcessRecordFragment();	
         ProcessRecordMenuFrag recordMenuFrag = new ProcessRecordMenuFrag();	
         recordFrag.setArguments(getIntent().getExtras());	
         recordMenuFrag.setArguments(getIntent().getExtras());	
-        
         transaction.replace(R.id.main_top_frame, recordFrag, "RecordFrag");
         transaction.add(R.id.main_bottom_frame, recordMenuFrag, "RecordMenuFrag");
         transaction.addToBackStack(null);
@@ -202,12 +197,10 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 		
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        
         LogViewFragment logFrag = new LogViewFragment();	
         LogViewMenuFrag logMenuFrag = new LogViewMenuFrag();	
         logFrag.setArguments(getIntent().getExtras());	
         logMenuFrag.setArguments(getIntent().getExtras());	
-        
         transaction.replace(R.id.main_top_frame, logFrag, "LogFrag");
         transaction.add(R.id.main_bottom_frame, logMenuFrag, "LogMenuFrag");
         transaction.addToBackStack(null);
@@ -222,28 +215,46 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 	}
 
 	@Override
+	public void saveRecordButtonPush() {
+		Log.i(EVENT, "MainActivity saveRecordButtonPush()");
+		
+		//GET REFERENCES TO THE ProcessRecordFragment AND BEGIN EXTRACTING INFORMATION FROM IT
+		ProcessRecordEditMenuFrag recordMenuFrag = (ProcessRecordEditMenuFrag) getSupportFragmentManager().findFragmentByTag("RecordMenuFrag");
+		@SuppressWarnings("unused")
+		ProcessRecordFragment recordFrag = (ProcessRecordFragment) getSupportFragmentManager().findFragmentByTag("RecordFrag");
+		
+		//GET A RECORD FROM THE RUNNING ProcessRecordFragment AND ADD IT TO THE ARRAY IN THE POSITION IS WAS RECIEVED FROM (lastSelection SET IN editSelectedRecord)
+		Record newRecord = recordFrag.getRecord();
+		addRecordToLog(newRecord, lastSelection);
+		
+		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        HomeFragment homeFrag = new HomeFragment();		
+        homeFrag.setArguments(getIntent().getExtras());	
+        transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
+        transaction.remove(recordMenuFrag);
+        transaction.addToBackStack(null);
+        transaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
+		
+	}
+	
+	@Override
 	public void commitRecordButtonPush() {
 		Log.i(EVENT, "MainActivity commitRecordButtonPush()");
 		
 		//GET REFERENCES TO THE ProcessRecordFragment AND BEGIN EXTRACTING INFORMATION FROM IT
 		ProcessRecordMenuFrag recordMenuFrag = (ProcessRecordMenuFrag) getSupportFragmentManager().findFragmentByTag("RecordMenuFrag");
-		@SuppressWarnings("unused")
 		ProcessRecordFragment recordFrag = (ProcessRecordFragment) getSupportFragmentManager().findFragmentByTag("RecordFrag");
 		
-		//
-		//
-		//TODO
-		//THIS IS WHERE THE LOGIC FOR CREATING AND STORING THE RECORD INTO THE WASHLOG GOES
-		//
-		//
-		//
+		//GET A RECORD FROM THE RUNNING ProcessRecordFragment AND ADD IT TO THE ARRAY IN A NEW POSITION (-1 SWITCH IN addRecordToLog METHOD)
+		Record newRecord = recordFrag.getRecord();
+		addRecordToLog(newRecord, -1);
 		
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        
         HomeFragment homeFrag = new HomeFragment();		
-        homeFrag.setArguments(getIntent().getExtras());		
-        
+        homeFrag.setArguments(getIntent().getExtras());
         transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
         transaction.remove(recordMenuFrag);
         transaction.addToBackStack(null);
@@ -253,7 +264,7 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 	}
 
 	@Override
-	public void logCancel() {
+	public void logCancelButtonPush() {
 		Log.i(EVENT, "MainActivity logCancel()");
 		
 		//FIND THE MENU FRAGMENT AND OBTAIN A REFERENCE SO IT CAN BE REMOVED IN THE FRAGMENT TRANSITION
@@ -261,10 +272,8 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 		
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        
         HomeFragment homeFrag = new HomeFragment();		
-        homeFrag.setArguments(getIntent().getExtras());		
-        
+        homeFrag.setArguments(getIntent().getExtras());
         transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
         transaction.remove(logViewMenuFrag);
         transaction.addToBackStack(null);
@@ -273,7 +282,7 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 	}
 
 	@Override
-	public void recordCancel(boolean edit) {
+	public void recordCancel() {
 		Log.i(EVENT, "MainActivity recordCancel()");
 		
 		//FIND THE MENU FRAGMENT AND OBTAIN A REFERENCE SO IT CAN BE REMOVED IN THE FRAGMENT TRANSITION
@@ -281,10 +290,8 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 		
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        
         HomeFragment homeFrag = new HomeFragment();		
-        homeFrag.setArguments(getIntent().getExtras());		
-        
+        homeFrag.setArguments(getIntent().getExtras());
         transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
         transaction.remove(recordMenuFrag);
         transaction.addToBackStack(null);
@@ -301,10 +308,8 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 		
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        
         HomeFragment homeFrag = new HomeFragment();		
         homeFrag.setArguments(getIntent().getExtras());		
-        
         transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
         transaction.remove(recordMenuFrag);
         transaction.addToBackStack(null);
@@ -320,7 +325,7 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 	}
 	
 	public void addRecordToLog(Record record, int selection){
-		Log.i(EVENT, "MainActivity addRecordToLog()");
+		Log.i(EVENT, "MainActivity addRecordToLog(), selection --> " + selection);
 		
 		if (selection == -1) {
 			//GROW THE WASH LOG AND ADD THE SUPPLIED RECORD TO THE END
@@ -333,7 +338,6 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 		else if (selection > -1) {
 			washLog[selection] = record;
 		}
-		else {Log.i(EVENT, "MainActivity addRecordToLog selection BAD RESULT");}
     }
 	
 	public void addHeadersToLog(){
@@ -352,14 +356,14 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 			
 			//FIND THE LOG FRAGMENT WHILE IT IS STILL RUNNING AND EXTRACT THE SELECTION VALUE
 			LogViewFragment logViewFrag = (LogViewFragment) getSupportFragmentManager().findFragmentByTag("LogFrag");
-			int selection = logViewFrag.hasSelection();
+			
+			//SET THE LogView SELECTION TO THE lastSelection GLOBAL SELECTION VARIABLE
+			lastSelection = logViewFrag.hasSelection();
 			
 			//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-	        
 	        ProcessRecordFragment recordFrag = new ProcessRecordFragment();		
 	        ProcessRecordEditMenuFrag recordMenuFrag = new ProcessRecordEditMenuFrag();
-	        
 	        transaction.replace(R.id.main_top_frame, recordFrag, "RecordFrag");
 	        transaction.replace(R.id.main_bottom_frame, recordMenuFrag, "RecordMenuFrag");
 	        transaction.addToBackStack(null);
@@ -367,85 +371,13 @@ public class MainActivity extends FragmentActivity implements ProcessRecordEditM
 	        getSupportFragmentManager().executePendingTransactions();
 	        
 	        //SET THE FIELDS IN THE ProcessRecordFragment USING THE SELECTED ID FROM THE ListView
-	        setFields(selection, washLog);
+	        recordFrag.setFields(lastSelection, washLog);
 	}
 	
-	public void setFields(int selection, Record[] washLog) {
-		Log.i(EVENT, "MainActivity setFields()");
-
-		//ATTACHING INPUT HANDLES FOR FIELDS
-		EditText vinInput = (EditText) findViewById(R.id.vin_input);
-		EditText milesInput = (EditText) findViewById(R.id.miles_input);
-		TextView gasText = (TextView) findViewById(R.id.gas_text_box);
-		EditText pumpedInput = (EditText) findViewById(R.id.pumped_input);
-		EditText eracInput = (EditText) findViewById(R.id.erac_input);
-		EditText notesInput = (EditText) findViewById(R.id.notes_input);
-		SeekBar seekbar = (SeekBar) findViewById(R.id.gas_seek_bar);
-		
-		//ASSIGNING VALUES TO ATTACHED FIELDS
-		eracInput.setText(washLog[selection].getEmployeeNumberRecord());
-		milesInput.setText(washLog[selection].getMilesRecord());
-		vinInput.setText(washLog[selection].getVinRecord());
-		gasText.setText(washLog[selection].getGasLevelRecord());
-		pumpedInput.setText(washLog[selection].getGasPumpedRecord());
-		notesInput.setText(washLog[selection].getNotesRecord());
-		seekbar.setProgress(Integer.parseInt(washLog[selection].getGasLevelRecord()));
-		
-		Log.i(EVENT, "Starting to set radio fields");
-		//SETTING RADIO FIELD AND CHECKBOX AREAS
-		String inspectionResult = washLog[selection].getInspectionResultRecord();
-		RadioButton radioButton; 
-		if (inspectionResult.equalsIgnoreCase("yes")) {
-			radioButton = (RadioButton) findViewById(R.id.inspection_yesOK);
-			radioButton.setChecked(true);
-		}
-		else if (inspectionResult.equalsIgnoreCase("no")) {
-			radioButton = (RadioButton) findViewById(R.id.inspection_no);
-			radioButton.setChecked(true);
-		}
-		else if (inspectionResult.equalsIgnoreCase("dx")) {
-			radioButton = (RadioButton) findViewById(R.id.inspection_dx);
-			radioButton.setChecked(true);
-		}
-		
-		String petsResult = washLog[selection].getSmokeOrPetsRecord();
-		CheckBox checkBox; 
-		Log.i(EVENT, "petsResult = " + petsResult);
-		if (petsResult.equals("OK")) {
-			checkBox = (CheckBox) findViewById(R.id.pets_confirm);
-			checkBox.setChecked(false);
-			checkBox = (CheckBox) findViewById(R.id.smoke_confirm);
-			checkBox.setChecked(false);
-        }
-        else if (petsResult.equals("Smoke")) {
-        	checkBox = (CheckBox) findViewById(R.id.smoke_confirm);
-			checkBox.setChecked(true);
-        }
-        else if (petsResult.equals("Pet Hair")) {
-        	checkBox = (CheckBox) findViewById(R.id.pets_confirm);
-			checkBox.setChecked(true);
-        }
-        else if (petsResult.equals("Smk & Pet")) {
-        	checkBox = (CheckBox) findViewById(R.id.smoke_confirm);
-			checkBox.setChecked(true);
-			checkBox = (CheckBox) findViewById(R.id.pets_confirm);
-			checkBox.setChecked(true);
-        }
-		
-		Log.i(EVENT, "setFields() complete");
-	}
-
-	@Override
-	public void saveRecord(Record record, int selection){
-		Log.i(EVENT, "MainActivity saveRecord()");
-
-    	washLog[selection] = record;
-    
-	}
-
 	@Override
 	public boolean selectionTrue() {
 		Log.i(EVENT, "MainActivity selectionTrue()");
+		
 		//FIND THE LOG FRAGMENT WHILE IT IS STILL RUNNING AND EXTRACT THE SELECTION VALUE
 		LogViewFragment logViewFrag = (LogViewFragment) getSupportFragmentManager().findFragmentByTag("LogFrag");
 		

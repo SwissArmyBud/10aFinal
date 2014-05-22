@@ -42,7 +42,7 @@
                     android:layout_centerVertical="true"
                     android:clickable="false"
                     android:longClickable="false"
-                    android:text="TextView" />
+                    android:text="Current Status" />
 
             </RelativeLayout>
 

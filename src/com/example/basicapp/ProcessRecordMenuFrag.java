@@ -25,7 +25,7 @@ public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
     public interface ProcessRecordMenuFragInterface {
         public void commitRecordButtonPush();
-        public void recordCancel(boolean bool);
+        public void recordCancel();
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -71,7 +71,7 @@ public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
 			activityCallback.commitRecordButtonPush();
 			break;
 		case R.id.record_cancel:
-			activityCallback.recordCancel(false);
+			activityCallback.recordCancel();
 			break;
 		}
     }

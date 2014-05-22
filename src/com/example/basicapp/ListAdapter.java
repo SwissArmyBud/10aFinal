@@ -89,7 +89,7 @@ public class ListAdapter extends ArrayAdapter<Record> {
 	    defaultMatch = washLog[position].getInspectionResultRecord().equalsIgnoreCase(defaultString);
 	    empty = washLog[position].getInspectionResultRecord().equalsIgnoreCase("");
 	    status = "";
-	    if (defaultMatch == true | empty == true) {
+	    if (defaultMatch == true || empty == true) {
 	    	status = "n/a";
 	    } 
 	    else {status = washLog[position].getInspectionResultRecord();}

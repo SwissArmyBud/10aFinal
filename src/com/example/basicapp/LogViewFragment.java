@@ -1,7 +1,5 @@
 package com.example.basicapp;
 
-import com.example.basicapp.R.color;
-
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -66,7 +64,6 @@ public class LogViewFragment extends Fragment {
                     //THE position VARIABLE GIVES POSITION OF CLICKED ITEM IN LIST VIEW, STARTING WITH --> TOP ROW = 0
                     public void onItemClick(AdapterView<?> arg0, View v,int position, long arg3){
                     	Log.i(EVENT, "listView item " + position + " clicked");
-                        activityCallback.updateStatus("***LOG VIEW ITEM " + position + " CLICKED***");
                         
                         //SET ALL THE BACKGROUND COLORS TO THE SAME COLOR
                         int newPos = position;
@@ -78,12 +75,12 @@ public class LogViewFragment extends Fragment {
                         if (newPos==lastPos) {
                         	v.setBackgroundColor(Color.WHITE);
                         	lastPos = -1;
-                        	Log.i(EVENT, "v equal");
+                        	Log.i(EVENT, "selection identical, " + position + "button unselected");
                         }
                         //OTHERWISE MAKE THE BUTTONS BACKGROUND A DIFFERENT COLOR AND STORE ITS POSITION USING lastPos
                         else {
-                        	v.setBackgroundColor(color.AliceBlue);
-                        	Log.i(EVENT, "v not equal");
+                        	v.setBackgroundColor(Color.LTGRAY);
+                        	Log.i(EVENT, "new selection, " + position + "button selected");
                         	lastPos = newPos;
                         }
                     }
