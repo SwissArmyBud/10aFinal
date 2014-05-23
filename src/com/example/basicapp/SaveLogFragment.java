@@ -10,23 +10,22 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class HomeFragment extends Fragment implements OnClickListener {
+public class SaveLogFragment extends Fragment implements OnClickListener {
 
-	Button addRecordButton;
-	Button viewLogButton;
-	Button manageLogButton;
+	Button saveLogButton;
+	Button loadLogButton;
+	Button cancelButton;
 	
     private static final String EVENT = "Event";
     private static final String LIFE = "LifeCycle";
 	
-    HomeFragmentInterface activityCallback;
+    SaveLogFragInterface activityCallback;
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
-    public interface HomeFragmentInterface {
-        public void homeAddRecordButtonPush();
-        public void homeViewLogButton();
-        public void homeSaveLogButton();
-        public void updateStatus(String string);
+    public interface SaveLogFragInterface {
+        public void saveLoadLogButton();
+        public void saveSaveLogButton();
+        public void saveCancelButton();
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -36,10 +35,10 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		Log.i(LIFE, "HomeFragment onAttach");
         
         try {
-            activityCallback = (HomeFragmentInterface) activity;
+            activityCallback = (SaveLogFragInterface) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnButtonPush");
+                    + " must implement SaveLogFragInterface");
         }
     }
 
@@ -49,15 +48,20 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		Log.i(LIFE, "HomeFragment onCreateView");
         
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
-        View rootView = inflater.inflate(R.layout.home_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.log_save_menu, container, false);
+        
+        
+        Button saveLogButton;
+    	Button loadLogButton;
+    	Button cancelButton;
         
         //SET BUTTON CLICK LISTENERS
-        addRecordButton = (Button) rootView.findViewById(R.id.add_record_button);
-        addRecordButton.setOnClickListener(this); 
-        viewLogButton = (Button) rootView.findViewById(R.id.view_log_button);
-        viewLogButton.setOnClickListener(this); 
-        manageLogButton = (Button) rootView.findViewById(R.id.manage_log_button);
-        manageLogButton.setOnClickListener(this);
+    	saveLogButton = (Button) rootView.findViewById(R.id.save_log_button);
+    	saveLogButton.setOnClickListener(this); 
+    	loadLogButton = (Button) rootView.findViewById(R.id.load_log_button);
+    	loadLogButton.setOnClickListener(this); 
+    	cancelButton = (Button) rootView.findViewById(R.id.save_cancel);
+    	cancelButton.setOnClickListener(this);
     	
         //RETURN THE VIEW
         return rootView;
@@ -70,17 +74,21 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		
 		switch (v.getId()) {
 		
+		
+		
+		
 		//adding cases for different BUTTON ids
-	    case R.id.add_record_button:
-	    	Log.i(EVENT, "HomeFrag calling addRecord()");
-	    	activityCallback.homeAddRecordButtonPush();
+	    case R.id.load_log_button:
+	    	Log.i(EVENT, "SaveLog calling saveLoadLogButton()");
+	    	activityCallback.saveLoadLogButton();
 	        break;
-	    case R.id.view_log_button:
-	    	Log.i(EVENT, "HomeFrag calling viewLog()");
-	    	activityCallback.homeViewLogButton();
+	    case R.id.save_log_button:
+	    	Log.i(EVENT, "SaveLog calling saveSaveLogButton()");
+	    	activityCallback.saveSaveLogButton();
 	        break;
-	    case R.id.manage_log_button:
-				activityCallback.homeSaveLogButton();
+	    case R.id.save_cancel:
+	    	Log.i(EVENT, "SaveLog calling saveCancelButton()");
+			activityCallback.saveCancelButton();
 	        break;
 	        
 		}

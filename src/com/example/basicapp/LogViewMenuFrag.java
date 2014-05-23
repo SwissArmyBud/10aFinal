@@ -26,7 +26,7 @@ public class LogViewMenuFrag extends Fragment implements OnClickListener {
         public void updateStatus(String string);
         public void editSelectedRecord();
         public void logCancelButtonPush();
-        public boolean selectionTrue();
+        public int logHasSelection();
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -75,7 +75,7 @@ public class LogViewMenuFrag extends Fragment implements OnClickListener {
 			break;
 		case R.id.log_menu_edit:
 			
-			if (activityCallback.selectionTrue() == true) {
+			if (activityCallback.logHasSelection() != -1) {
 				activityCallback.editSelectedRecord();
 			}
 			break;
