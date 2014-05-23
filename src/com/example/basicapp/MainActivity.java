@@ -542,6 +542,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 	public void saveSaveLogButton() {
 		Log.i(EVENT, "MainActivity saveSaveLogButton()");
 		saveLogInternalStorage();
+		saveLogToCSV();
 	}
 
 	@Override
@@ -556,5 +557,69 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		transaction.addToBackStack(null);
 		transaction.commit();
 		getSupportFragmentManager().executePendingTransactions();
+	}
+	
+	public void saveLogToCSV() {
+		Log.i(EVENT, "MainActivity saveLogToCSV()");
+		
+		//GET REFERENCE TO WRITERS
+		FileOutputStream fileStream = null; 
+		OutputStreamWriter streamWriter = null;
+		BufferedOutputStream bufferedStream = null;
+		StringBuilder stringBuilder = new StringBuilder();
+
+		//SETUP THE DIRECTORY AND FILE FOR WRITING
+		String root = Environment.getExternalStorageDirectory().toString();
+		File directory = new File(root + "/JSON");
+		String filename = "testCSV.csv";
+		directory.mkdirs();
+		File file = new File (directory, filename);
+			
+		saveLogInternalStorage();
+		addHeadersToLog();
+		
+		            //start at the beginning of the index and loop through until finished writing
+		            for (int index = 0;index<washLog.length;index++) {
+
+		                //set the data to be written
+		            	stringBuilder.append(washLog[index].getVinRecord());
+		            	stringBuilder.append(',');
+		            	stringBuilder.append(washLog[index].getMilesRecord());
+		            	stringBuilder.append(',');
+		            	stringBuilder.append(washLog[index].getGasLevelRecord());
+		            	stringBuilder.append(',');
+		            	stringBuilder.append(washLog[index].getGasPumpedRecord());
+		            	stringBuilder.append(',');
+		            	stringBuilder.append(washLog[index].getEmployeeNumberRecord());
+		            	stringBuilder.append(',');
+		            	stringBuilder.append(washLog[index].getInspectionResultRecord());
+		            	stringBuilder.append(',');
+		            	stringBuilder.append(washLog[index].getSmokeOrPetsRecord());
+		            	stringBuilder.append(',');
+		            	stringBuilder.append(washLog[index].getNotesRecord());
+		            	stringBuilder.append(',');
+		            	stringBuilder.append('\n');
+
+		            }
+		            
+		            try {
+		            	try {
+		            		
+		            		//SET THE FILE STREAM
+		            		fileStream = new FileOutputStream(file);
+		            		bufferedStream = new BufferedOutputStream(fileStream);  
+		            		streamWriter = new OutputStreamWriter(bufferedStream); 
+
+		            		//WRITE THE STRING THEN FLUSH AND CLOSE THE WRITING STACK
+		            		streamWriter.write(stringBuilder.toString());
+		            		bufferedStream.flush();
+		            		streamWriter.flush(); 
+		            		streamWriter.close();
+		            		
+		            	} catch (FileNotFoundException e) {e.printStackTrace();}
+		            } catch (IOException e) {e.printStackTrace();} 
+		
+		loadLogInternalStorage();
+		
 	}
 }

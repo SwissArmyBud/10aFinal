@@ -74,9 +74,6 @@ public class SaveLogFragment extends Fragment implements OnClickListener {
 		
 		switch (v.getId()) {
 		
-		
-		
-		
 		//adding cases for different BUTTON ids
 	    case R.id.load_log_button:
 	    	Log.i(EVENT, "SaveLog calling saveLoadLogButton()");
