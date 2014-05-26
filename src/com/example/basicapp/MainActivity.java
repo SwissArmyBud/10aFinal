@@ -26,6 +26,7 @@ import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -34,11 +35,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 	private static final String LIFE = "LifeCycle";
 	private static final String EVENT = "Event";
-	private static Record[] washLog = {
-		//new Record("EP001654", 5600, 7, 0, "E863PB", 3, 4, "This car was fucked up. DX plus Smoke plus Pets."),
-		//new Record("ER109301", 12387, 2, 24.85, "E863PB", 1, 1, "This car was inspected and passed and had no smoke or pets."),
-		//new Record("S0F37110", 200, 8, 0, "E863PB", 2, 2, "This car was not damaged but did have smoke issues.")
-	};
+	private static Record[] washLog = {};
 	private int lastSelection = -1;
 
 	/* _____________________________
@@ -72,13 +69,8 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 			return;
 		}
 
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-		HomeFragment homeFrag = new HomeFragment();	
-		homeFrag.setArguments(getIntent().getExtras());	
-
-		transaction.add(R.id.main_top_frame, homeFrag, "HomeFrag");
-		transaction.commit();
+		goToHomeScreen();
+		
 	}
 
 	protected void onStart() {
@@ -182,28 +174,28 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 	 * ____________________________________________
 	 */
 
+	//ALLOWS THE PROGRAM TO UPDATE THE STATUS TAB AT THE BOTTOM OF THE SCREEN
 	public void updateStatus(String string) {
 		Log.i(EVENT, "MainActivity updateStatus() -->" + string);
 
 		TextView statusText = (TextView) findViewById(R.id.current_status);
 		statusText.setText(string);
+		
 	}
 
+	//THIS AREA IS FOR THE HOME SCREEN BUTTONS
+	//_____________________________________
+	//
 	@Override
 	public void homeAddRecordButtonPush() {
 		Log.i(EVENT, "MainActivity homeAddRecordButtonPush()");
 
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		ProcessRecordFragment recordFrag = new ProcessRecordFragment();	
 		ProcessRecordMenuFrag recordMenuFrag = new ProcessRecordMenuFrag();	
-		recordFrag.setArguments(getIntent().getExtras());	
-		recordMenuFrag.setArguments(getIntent().getExtras());	
-		transaction.replace(R.id.main_top_frame, recordFrag, "RecordFrag");
-		transaction.add(R.id.main_bottom_frame, recordMenuFrag, "RecordMenuFrag");
-		transaction.addToBackStack(null);
-		transaction.commit();
-		getSupportFragmentManager().executePendingTransactions();
+		fragmentTransition(recordFrag, "RecordFrag", recordMenuFrag, "RecordMenuFrag");
+		
+		updateStatus("**NEW RECORD**");
 	}
 
 	@Override
@@ -211,16 +203,11 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		Log.i(EVENT, "MainActivity homeViewLogButton()");
 
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		LogViewFragment logFrag = new LogViewFragment();	
-		LogViewMenuFrag logMenuFrag = new LogViewMenuFrag();	
-		logFrag.setArguments(getIntent().getExtras());	
-		logMenuFrag.setArguments(getIntent().getExtras());	
-		transaction.replace(R.id.main_top_frame, logFrag, "LogFrag");
-		transaction.add(R.id.main_bottom_frame, logMenuFrag, "LogMenuFrag");
-		transaction.addToBackStack(null);
-		transaction.commit();
-		getSupportFragmentManager().executePendingTransactions();
+		LogViewMenuFrag logMenuFrag = new LogViewMenuFrag();
+		fragmentTransition(logFrag, "LogViewFrag", logMenuFrag, "LogMenuFrag");
+		
+		updateStatus("**VIEWING LOG**");
 	}
 
 	@Override
@@ -228,115 +215,84 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		Log.i(EVENT, "MainActivity homeSaveLogButton()");
 
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		SaveLogFragment homeFrag = new SaveLogFragment();		
-		homeFrag.setArguments(getIntent().getExtras());		
-		transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
-		transaction.addToBackStack(null);
-		transaction.commit();
-		getSupportFragmentManager().executePendingTransactions();
+		SaveLogFragment saveLogFrag = new SaveLogFragment();
+		fragmentTransition(saveLogFrag, "SaveLogFrag");
+		
+		updateStatus("**MANAGING LOG**");
+	}
+	
+	//THIS AREA IS FOR THE LOG VIEW/SAVE SCREEN BUTTONS
+	//_____________________________________
+	//
+	@Override
+	public void saveLoadLogButton() {
+		Log.i(EVENT, "MainActivity saveLoadLogButton()");
+		
+		loadLogInternalStorage();
+		goToHomeScreen();
+		updateStatus("**LOG LOADED**");
+		
 	}
 
 	@Override
-	public void saveRecordButtonPush() {
+	public void saveSaveLogButton() {
+		Log.i(EVENT, "MainActivity saveSaveLogButton()");
+		
+		saveLogInternalStorage();
+		saveLogToCSV();
+		goToHomeScreen();
+		updateStatus("**LOG SAVED**");
+		
+	}
+
+	public void saveClearLogButton() {
+		Log.i(EVENT, "MainActivity() saveClearLogButton()");
+			
+		washLog = new Record[0];
+		
+		updateStatus("**LOG CLEARED**");
+	}
+	
+	//GETS CALLED TO SAVE THE PROCESS FRAGMENT RECORD INTO THE LOG
+	@Override
+	public void saveRecordToLog() {
 		Log.i(EVENT, "MainActivity saveRecordButtonPush()");
 
 		//GET REFERENCES TO THE ProcessRecordFragment AND BEGIN EXTRACTING INFORMATION FROM IT
-		ProcessRecordEditMenuFrag recordMenuFrag = (ProcessRecordEditMenuFrag) getSupportFragmentManager().findFragmentByTag("RecordMenuFrag");
 		ProcessRecordFragment recordFrag = (ProcessRecordFragment) getSupportFragmentManager().findFragmentByTag("RecordFrag");
 
 		//GET A RECORD FROM THE RUNNING ProcessRecordFragment AND ADD IT TO THE ARRAY IN THE POSITION IS WAS RECIEVED FROM (lastSelection SET IN editSelectedRecord)
 		Record newRecord = recordFrag.getRecord();
 		addRecordToLog(newRecord, lastSelection);
 
-		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		HomeFragment homeFrag = new HomeFragment();		
-		homeFrag.setArguments(getIntent().getExtras());	
-		transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
-		transaction.remove(recordMenuFrag);
-		transaction.addToBackStack(null);
-		transaction.commit();
-		getSupportFragmentManager().executePendingTransactions();
+		updateStatus("**RECORD " + lastSelection + " SAVED**");
+		
+		lastSelection = -1;
+		
+		goToHomeScreen();
 
 	}
 
+	//GETS CALLED BY THE LOG VIEW MENU, SETS UP THE RECORD FOR EDITING
 	@Override
-	public void commitRecordButtonPush() {
-		Log.i(EVENT, "MainActivity commitRecordButtonPush()");
+	public void editSelectedRecord() {
+		Log.i(EVENT, "MainActivity editSelectedRecord() selection --> " + logHasSelection());
 
-		//GET REFERENCES TO THE ProcessRecordFragment AND BEGIN EXTRACTING INFORMATION FROM IT
-		ProcessRecordMenuFrag recordMenuFrag = (ProcessRecordMenuFrag) getSupportFragmentManager().findFragmentByTag("RecordMenuFrag");
-		ProcessRecordFragment recordFrag = (ProcessRecordFragment) getSupportFragmentManager().findFragmentByTag("RecordFrag");
-
-		//GET A RECORD FROM THE RUNNING ProcessRecordFragment AND ADD IT TO THE ARRAY IN A NEW POSITION (-1 SWITCH IN addRecordToLog METHOD)
-		Record newRecord = recordFrag.getRecord();
-		addRecordToLog(newRecord, -1);
+		if (logHasSelection() != -1) {
+		
+		//SET THE lastSelection GLOBAL SELECTION VARIABLE TO THE LogView SELECTION 
+		lastSelection = logHasSelection();
 
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		HomeFragment homeFrag = new HomeFragment();		
-		homeFrag.setArguments(getIntent().getExtras());
-		transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
-		transaction.remove(recordMenuFrag);
-		transaction.addToBackStack(null);
-		transaction.commit();
-		getSupportFragmentManager().executePendingTransactions();
+		ProcessRecordFragment recordFrag = new ProcessRecordFragment();		
+		ProcessRecordEditMenuFrag recordMenuFrag = new ProcessRecordEditMenuFrag();
+		fragmentTransition(recordFrag, "RecordFrag", recordMenuFrag, "RecordMenuFrag");
 
-	}
-
-	@Override
-	public void logCancelButtonPush() {
-		Log.i(EVENT, "MainActivity logCancel()");
-
-		//FIND THE MENU FRAGMENT AND OBTAIN A REFERENCE SO IT CAN BE REMOVED IN THE FRAGMENT TRANSITION
-		LogViewMenuFrag logViewMenuFrag = (LogViewMenuFrag) getSupportFragmentManager().findFragmentByTag("LogMenuFrag");
-
-		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		HomeFragment homeFrag = new HomeFragment();		
-		homeFrag.setArguments(getIntent().getExtras());
-		transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
-		transaction.remove(logViewMenuFrag);
-		transaction.addToBackStack(null);
-		transaction.commit();
-		getSupportFragmentManager().executePendingTransactions();
-	}
-
-	@Override
-	public void recordCancel() {
-		Log.i(EVENT, "MainActivity recordCancel()");
-
-		//FIND THE MENU FRAGMENT AND OBTAIN A REFERENCE SO IT CAN BE REMOVED IN THE FRAGMENT TRANSITION
-		ProcessRecordMenuFrag recordMenuFrag = (ProcessRecordMenuFrag) getSupportFragmentManager().findFragmentByTag("RecordMenuFrag");
-
-		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		HomeFragment homeFrag = new HomeFragment();		
-		homeFrag.setArguments(getIntent().getExtras());
-		transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
-		transaction.remove(recordMenuFrag);
-		transaction.addToBackStack(null);
-		transaction.commit();
-		getSupportFragmentManager().executePendingTransactions();
-	}
-
-	@Override
-	public void editCancel() {
-		Log.i(EVENT, "MainActivity recordCancel()");
-
-		//FIND THE MENU FRAGMENT AND OBTAIN A REFERENCE SO IT CAN BE REMOVED IN THE FRAGMENT TRANSITION
-		ProcessRecordEditMenuFrag recordMenuFrag = (ProcessRecordEditMenuFrag) getSupportFragmentManager().findFragmentByTag("RecordMenuFrag");
-
-		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		HomeFragment homeFrag = new HomeFragment();		
-		homeFrag.setArguments(getIntent().getExtras());		
-		transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
-		transaction.remove(recordMenuFrag);
-		transaction.addToBackStack(null);
-		transaction.commit();
-		getSupportFragmentManager().executePendingTransactions();
+		//SET THE FIELDS IN THE ProcessRecordFragment USING THE SELECTED ID FROM THE ListView
+		recordFrag.setFields(lastSelection, washLog);
+		updateStatus("**EDITING RECORD " + lastSelection + "**");
+		}
+		
 	}
 
 	public static Record[] getCurrentLog() {
@@ -346,7 +302,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		return washLog;
 	}
 
-	public void addRecordToLog(Record record, int selection){
+	private void addRecordToLog(Record record, int selection){ //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity addRecordToLog(), selection --> " + selection);
 
 		if (selection == -1) {
@@ -360,53 +316,30 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		else if (selection > -1) {
 			washLog[selection] = record;
 		}
+		
 	}
 
-	public void addHeadersToLog(){
+	private void addHeadersToLog(){ //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity addHeadersToLog()");
 
 		//GROW THE WASH LOG AND ADD A DEFAULT RECORD AT THE HEAD, THEREBY CREATING HEADERS FOR THE CSV FILE
 		Record[] newArray = new Record[washLog.length+1];
 		System.arraycopy(washLog, 0, newArray, 1, washLog.length);
 		newArray[0] = new Record();
-		washLog = newArray;        
+		washLog = newArray;
+		
 	}
 
-	@Override
-	public void editSelectedRecord() {
-		Log.i(EVENT, "MainActivity editSelectedRecord()");
-
-		//FIND THE LOG FRAGMENT WHILE IT IS STILL RUNNING AND EXTRACT THE SELECTION VALUE
-		LogViewFragment logViewFrag = (LogViewFragment) getSupportFragmentManager().findFragmentByTag("LogFrag");
-
-		//SET THE LogView SELECTION TO THE lastSelection GLOBAL SELECTION VARIABLE
-		lastSelection = logViewFrag.hasSelection();
-
-		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		ProcessRecordFragment recordFrag = new ProcessRecordFragment();		
-		ProcessRecordEditMenuFrag recordMenuFrag = new ProcessRecordEditMenuFrag();
-		transaction.replace(R.id.main_top_frame, recordFrag, "RecordFrag");
-		transaction.replace(R.id.main_bottom_frame, recordMenuFrag, "RecordMenuFrag");
-		transaction.addToBackStack(null);
-		transaction.commit();
-		getSupportFragmentManager().executePendingTransactions();
-
-		//SET THE FIELDS IN THE ProcessRecordFragment USING THE SELECTED ID FROM THE ListView
-		recordFrag.setFields(lastSelection, washLog);
-	}
-
-	@Override
-	public int logHasSelection() {
+	private int logHasSelection() { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity selectionTrue()");
 
 		//FIND THE LOG FRAGMENT WHILE IT IS STILL RUNNING AND EXTRACT THE SELECTION VALUE
-		LogViewFragment logViewFrag = (LogViewFragment) getSupportFragmentManager().findFragmentByTag("LogFrag");
+		LogViewFragment logViewFrag = (LogViewFragment) getSupportFragmentManager().findFragmentByTag("LogViewFrag");
 
 		return logViewFrag.hasSelection();
 	}
 
-	public void saveLogInternalStorage () {
+	private void saveLogInternalStorage () { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity saveLogInternalStorage()");
 
 		int numberOfRecords = washLog.length;
@@ -467,9 +400,10 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 				} catch (JSONException e) {e.printStackTrace();}
 			} catch (FileNotFoundException e) {e.printStackTrace();}
 		} catch (IOException e) {e.printStackTrace();}
+		
 	}
 
-	public void loadLogInternalStorage () {
+	private void loadLogInternalStorage () { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity loadLogInternalStorage()");
 		JSONObject inputJSON = null;
 		JSONArray washLogJSON = null;
@@ -530,38 +464,12 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 		//SAVE THE RESULTING ARRAY INTO THE CURRENT WASHLOG POSITION
 		washLog = tempLog;
-	}
-
-	@Override
-	public void saveLoadLogButton() {
-		Log.i(EVENT, "MainActivity saveLoadLogButton()");
-		loadLogInternalStorage();
-	}
-
-	@Override
-	public void saveSaveLogButton() {
-		Log.i(EVENT, "MainActivity saveSaveLogButton()");
-		saveLogInternalStorage();
-		saveLogToCSV();
-	}
-
-	@Override
-	public void saveCancelButton() {
-		Log.i(EVENT, "MainActivity saveCancelButton()");
 		
-		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		HomeFragment homeFrag = new HomeFragment();		
-		homeFrag.setArguments(getIntent().getExtras());		
-		transaction.replace(R.id.main_top_frame, homeFrag, "HomeFrag");
-		transaction.addToBackStack(null);
-		transaction.commit();
-		getSupportFragmentManager().executePendingTransactions();
 	}
-	
-	public void saveLogToCSV() {
+
+	private void saveLogToCSV() { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity saveLogToCSV()");
-		
+
 		//GET REFERENCE TO WRITERS
 		FileOutputStream fileStream = null; 
 		OutputStreamWriter streamWriter = null;
@@ -574,52 +482,95 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		String filename = "testCSV.csv";
 		directory.mkdirs();
 		File file = new File (directory, filename);
-			
+
+		//SAVE THE CURRENT LOG TO INTERNAL STORAGE AND THEN ADD HEADERS
 		saveLogInternalStorage();
 		addHeadersToLog();
-		
-		            //start at the beginning of the index and loop through until finished writing
-		            for (int index = 0;index<washLog.length;index++) {
 
-		                //set the data to be written
-		            	stringBuilder.append(washLog[index].getVinRecord());
-		            	stringBuilder.append(',');
-		            	stringBuilder.append(washLog[index].getMilesRecord());
-		            	stringBuilder.append(',');
-		            	stringBuilder.append(washLog[index].getGasLevelRecord());
-		            	stringBuilder.append(',');
-		            	stringBuilder.append(washLog[index].getGasPumpedRecord());
-		            	stringBuilder.append(',');
-		            	stringBuilder.append(washLog[index].getEmployeeNumberRecord());
-		            	stringBuilder.append(',');
-		            	stringBuilder.append(washLog[index].getInspectionResultRecord());
-		            	stringBuilder.append(',');
-		            	stringBuilder.append(washLog[index].getSmokeOrPetsRecord());
-		            	stringBuilder.append(',');
-		            	stringBuilder.append(washLog[index].getNotesRecord());
-		            	stringBuilder.append(',');
-		            	stringBuilder.append('\n');
+		//BUILD THE CSV USING FIELD PARSING AND LINE DEMARCATION
+		for (int index = 0;index<washLog.length;index++) {
 
-		            }
-		            
-		            try {
-		            	try {
-		            		
-		            		//SET THE FILE STREAM
-		            		fileStream = new FileOutputStream(file);
-		            		bufferedStream = new BufferedOutputStream(fileStream);  
-		            		streamWriter = new OutputStreamWriter(bufferedStream); 
+			//set the data to be written
+			stringBuilder.append(washLog[index].getVinRecord());
+			stringBuilder.append(',');
+			stringBuilder.append(washLog[index].getMilesRecord());
+			stringBuilder.append(',');
+			stringBuilder.append(washLog[index].getGasLevelRecord());
+			stringBuilder.append(',');
+			stringBuilder.append(washLog[index].getGasPumpedRecord());
+			stringBuilder.append(',');
+			stringBuilder.append(washLog[index].getEmployeeNumberRecord());
+			stringBuilder.append(',');
+			stringBuilder.append(washLog[index].getInspectionResultRecord());
+			stringBuilder.append(',');
+			stringBuilder.append(washLog[index].getSmokeOrPetsRecord());
+			stringBuilder.append(',');
+			stringBuilder.append(washLog[index].getNotesRecord());
+			stringBuilder.append(',');
+			stringBuilder.append('\n');
 
-		            		//WRITE THE STRING THEN FLUSH AND CLOSE THE WRITING STACK
-		            		streamWriter.write(stringBuilder.toString());
-		            		bufferedStream.flush();
-		            		streamWriter.flush(); 
-		            		streamWriter.close();
-		            		
-		            	} catch (FileNotFoundException e) {e.printStackTrace();}
-		            } catch (IOException e) {e.printStackTrace();} 
-		
+		}
+
+		try {
+			try {
+
+				//SET THE FILE STREAM
+				fileStream = new FileOutputStream(file);
+				bufferedStream = new BufferedOutputStream(fileStream);  
+				streamWriter = new OutputStreamWriter(bufferedStream); 
+
+				//WRITE THE STRING THEN FLUSH AND CLOSE THE WRITING STACK
+				streamWriter.write(stringBuilder.toString());
+				bufferedStream.flush();
+				streamWriter.flush(); 
+				streamWriter.close();
+
+			} catch (FileNotFoundException e) {e.printStackTrace();}
+		} catch (IOException e) {e.printStackTrace();} 
+
+		//LOAD THE SAVED LOG FROM INTERNAL STORAGE, BASICALLY JUST REMOVING THE HEADERS
 		loadLogInternalStorage();
 		
 	}
+
+	private void fragmentTransition(Fragment topFrag, String topFragName, Fragment bottomFrag, String bottomFragName) { //ACTIVITY METHOD
+		Log.i(EVENT, "MainActivity fragmentTransition(Fragment, String, Fragment, String)");
+
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		transaction.replace(R.id.main_top_frame, topFrag, topFragName);
+		transaction.replace(R.id.main_bottom_frame, bottomFrag, bottomFragName);
+		transaction.addToBackStack(null);
+		transaction.commit();
+		getSupportFragmentManager().executePendingTransactions();
+		
+	}
+
+	private void fragmentTransition(Fragment topFrag, String topFragName) { //ACTIVITY METHOD
+		Log.i(EVENT, "MainActivity fragmentTransition(Fragment, String)");
+
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();	
+		
+		//TESTS FOR A LOWER FRAME AND THEN REMOVES IT IF IT EXISTS
+		if (getSupportFragmentManager().findFragmentById(R.id.main_bottom_frame) != null) {
+			Fragment menuFrag = (Fragment) getSupportFragmentManager().findFragmentById(R.id.main_bottom_frame);
+			transaction.remove(menuFrag);
+			}
+		
+		transaction.replace(R.id.main_top_frame, topFrag, topFragName);
+		transaction.addToBackStack(null);
+		transaction.commit();
+		getSupportFragmentManager().executePendingTransactions();
+
+	}
+
+	public void goToHomeScreen() { //ACTIVITY METHOD
+		Log.i(EVENT, "MainActivity goToHomeScreen()");
+		
+		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
+		HomeFragment homeFrag = new HomeFragment();		
+		fragmentTransition(homeFrag, "HomeFrag");
+		
+		updateStatus("**AT HOME**");
+	}
+
 }

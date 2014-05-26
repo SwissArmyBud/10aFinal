@@ -11,27 +11,37 @@
         android:layout_centerVertical="true"
         android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/save_log_button"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="2"
-        android:text="Save Log" />
+        <Button
+            android:id="@+id/log_clear_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:text="CLEAR LOG"
+            android:textSize="20dp" />
 
-    <Button
-        android:id="@+id/load_log_button"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_weight="2"
-        android:text="Load Log" />
+        <Button
+            android:id="@+id/save_log_button"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:text="Save Log"
+            android:textSize="20dp" />
 
-    <Button
-        android:id="@+id/save_cancel"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:text="Cancel" />
+        <Button
+            android:id="@+id/load_log_button"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:text="Load Log"
+            android:textSize="20dp" />
 
+        <Button
+            android:id="@+id/save_cancel"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:textSize="20dp" />
     </LinearLayout>
 
 </RelativeLayout>

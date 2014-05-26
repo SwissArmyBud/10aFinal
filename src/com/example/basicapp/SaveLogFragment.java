@@ -25,7 +25,8 @@ public class SaveLogFragment extends Fragment implements OnClickListener {
     public interface SaveLogFragInterface {
         public void saveLoadLogButton();
         public void saveSaveLogButton();
-        public void saveCancelButton();
+        public void saveClearLogButton();
+        public void goToHomeScreen();
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -53,6 +54,7 @@ public class SaveLogFragment extends Fragment implements OnClickListener {
         
         Button saveLogButton;
     	Button loadLogButton;
+    	Button clearLogButton;
     	Button cancelButton;
         
         //SET BUTTON CLICK LISTENERS
@@ -60,6 +62,8 @@ public class SaveLogFragment extends Fragment implements OnClickListener {
     	saveLogButton.setOnClickListener(this); 
     	loadLogButton = (Button) rootView.findViewById(R.id.load_log_button);
     	loadLogButton.setOnClickListener(this); 
+    	clearLogButton = (Button) rootView.findViewById(R.id.log_clear_button);
+    	clearLogButton.setOnClickListener(this); 
     	cancelButton = (Button) rootView.findViewById(R.id.save_cancel);
     	cancelButton.setOnClickListener(this);
     	
@@ -83,9 +87,13 @@ public class SaveLogFragment extends Fragment implements OnClickListener {
 	    	Log.i(EVENT, "SaveLog calling saveSaveLogButton()");
 	    	activityCallback.saveSaveLogButton();
 	        break;
+	    case R.id.log_clear_button:
+	    	Log.i(EVENT, "SaveLog calling saveClearLogButton()");
+			activityCallback.saveClearLogButton();
+	        break;
 	    case R.id.save_cancel:
 	    	Log.i(EVENT, "SaveLog calling saveCancelButton()");
-			activityCallback.saveCancelButton();
+			activityCallback.goToHomeScreen();
 	        break;
 	        
 		}

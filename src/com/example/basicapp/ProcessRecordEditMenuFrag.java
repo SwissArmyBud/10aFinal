@@ -23,8 +23,8 @@ public class ProcessRecordEditMenuFrag extends Fragment implements OnClickListen
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
     public interface ProcessRecordEditMenuFragInterface {
-        public void editCancel();
-        public void saveRecordButtonPush();
+        public void goToHomeScreen();
+        public void saveRecordToLog();
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -67,10 +67,10 @@ public class ProcessRecordEditMenuFrag extends Fragment implements OnClickListen
 		
 		//ADDING CASES FOR DIFFERENT BUTTON IDS
 		case R.id.save_record_button:
-			activityCallback.saveRecordButtonPush();
+			activityCallback.saveRecordToLog();
 			break;
 		case R.id.record_cancel:
-			activityCallback.editCancel();
+			activityCallback.goToHomeScreen();
 			break;
 		}
     }

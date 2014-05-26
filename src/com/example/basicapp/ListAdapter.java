@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 public class ListAdapter extends ArrayAdapter<Record> {
  	 
- 	    Context context;
- 	    int layoutResourceId;
- 	    Record[] washLog = null;
+	Context context;
+ 	int layoutResourceId;
+ 	Record[] washLog = null;
  	
  	public ListAdapter(Context context, int layoutResourceId, Record[] data) {
  	        super(context, layoutResourceId, data);

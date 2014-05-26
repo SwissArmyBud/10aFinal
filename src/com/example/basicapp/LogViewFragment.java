@@ -96,6 +96,8 @@ public class LogViewFragment extends Fragment {
 	*	THIS AREA IS FOR ADDING SUPPORTING METHODS
 	* ____________________________________________
     */
+	
+	//THIS METHOD RETURNS A ZERO OR POSITIVE SELECTION OR -1 FOR ALL NEGATIVE NUMBERS
 	public int hasSelection() {
 		Log.i(EVENT, "hasSelection: " + lastPos);
 		if (lastPos>-1) {

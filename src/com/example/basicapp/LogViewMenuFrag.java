@@ -23,10 +23,8 @@ public class LogViewMenuFrag extends Fragment implements OnClickListener {
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
     public interface LogViewMenuFragInterface {
-        public void updateStatus(String string);
         public void editSelectedRecord();
-        public void logCancelButtonPush();
-        public int logHasSelection();
+        public void goToHomeScreen();
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -71,13 +69,10 @@ public class LogViewMenuFrag extends Fragment implements OnClickListener {
 		
 		//ADDING CASES FOR DIFFERENT BUTTON IDS
 		case R.id.log_menu_cancel:
-			activityCallback.logCancelButtonPush();
+			activityCallback.goToHomeScreen();
 			break;
 		case R.id.log_menu_edit:
-			
-			if (activityCallback.logHasSelection() != -1) {
-				activityCallback.editSelectedRecord();
-			}
+			activityCallback.editSelectedRecord();
 			break;
 		}
     }
