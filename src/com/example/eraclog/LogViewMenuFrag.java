@@ -11,8 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 public class LogViewMenuFrag extends Fragment implements OnClickListener {
-
-    @SuppressWarnings("unused")
+	
 	private static final String EVENT = "Event";
     private static final String LIFE = "LifeCycle";
 
@@ -69,9 +68,11 @@ public class LogViewMenuFrag extends Fragment implements OnClickListener {
 		
 		//ADDING CASES FOR DIFFERENT BUTTON IDS
 		case R.id.log_view_cancel_button:
+	    	Log.i(EVENT, "LogViewMenuFrag calling goToHomeScreen()");
 			activityCallback.goToHomeScreen();
 			break;
 		case R.id.log_view_edit_button:
+	    	Log.i(EVENT, "LogViewMenuFrag calling editSelectedRecord()");
 			activityCallback.editSelectedRecord();
 			break;
 		}

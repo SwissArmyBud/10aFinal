@@ -15,10 +15,8 @@ import org.json.JSONObject;
 
 import com.example.eraclog.HomeFragment.HomeFragmentInterface;
 import com.example.eraclog.LogSaveFragment.SaveLogFragInterface;
-import com.example.eraclog.LogViewFragment.LogUpdateStatus;
 import com.example.eraclog.LogViewMenuFrag.LogViewMenuFragInterface;
-import com.example.eraclog.ProcessRecordEditMenuFrag.ProcessRecordEditMenuFragInterface;
-import com.example.eraclog.ProcessRecordFragment.ProcessRecordFragInterface;
+import com.example.eraclog.RecordEditMenuFrag.RecordEditMenuFragInterface;
 import com.example.eraclog.ProcessRecordMenuFrag.ProcessRecordMenuFragInterface;
 
 import android.os.Bundle;
@@ -31,7 +29,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-public class MainActivity extends FragmentActivity implements SaveLogFragInterface, ProcessRecordEditMenuFragInterface, HomeFragmentInterface, ProcessRecordMenuFragInterface, LogViewMenuFragInterface, ProcessRecordFragInterface, LogUpdateStatus {
+public class MainActivity extends FragmentActivity implements SaveLogFragInterface, RecordEditMenuFragInterface, HomeFragmentInterface, ProcessRecordMenuFragInterface, LogViewMenuFragInterface {
 
 	private static final String LIFE = "LifeCycle";
 	private static final String EVENT = "Event";
@@ -40,7 +38,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 	/* _____________________________
 	 * 
-	 * LIFECYCLE CREATION PATH
+	 * LIFECYCLE CREATION PATH    ***************************************************************
 	 * _____________________________
 
 	 ***CREATION***
@@ -77,6 +75,8 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		super.onStart();
 		Log.i(LIFE, "onStart");
 
+		loadLogInternalStorage();
+
 	}
 
 	protected void onResume() {
@@ -97,12 +97,14 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		super.onStop();
 		Log.i(LIFE, "onStop");
 
+		saveLogInternalStorage();
+		
 	}
 
 	protected void onRestart() { //CALLED BETWEEN onStop AND onStart WHEN RESTARTING FROM PAST onStop IN LIFECYCLE
 		super.onRestart();
 		Log.i(LIFE, "onRestart");
-
+		
 	}
 
 	protected void onDestroy() {
@@ -136,7 +138,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 	/* ____________________________________________
 	 *
-	 *	THIS AREA IS FOR HANDLING THE MENU SYSTEM
+	 *	THIS AREA IS FOR HANDLING THE MENU SYSTEM    ***************************************************************
 	 * ____________________________________________
 	 */
 
@@ -170,18 +172,9 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 	/* ____________________________________________
 	 *
-	 *	THIS AREA IS FOR ADDING SUPPORTING METHODS
+	 *	THIS AREA IS FOR ADDING SUPPORTING METHODS    ***************************************************************
 	 * ____________________________________________
 	 */
-
-	//ALLOWS THE PROGRAM TO UPDATE THE STATUS TAB AT THE BOTTOM OF THE SCREEN
-	public void updateStatus(String string) {
-		Log.i(EVENT, "MainActivity updateStatus() -->" + string);
-
-		TextView statusText = (TextView) findViewById(R.id.current_status);
-		statusText.setText(string);
-		
-	}
 
 	//RETURNS THE CURRENT washLog
 	public static Record[] getCurrentLog() {
@@ -191,7 +184,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		return washLog;
 	}
 	
-	//THIS AREA IS FOR THE HOME SCREEN BUTTONS
+	//HOME SCREEN BUTTONS
 	//_____________________________________
 	//
 	@Override
@@ -229,7 +222,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		updateStatus("**MANAGING LOG**");
 	}
 	
-	//THIS AREA IS FOR THE LOG VIEW/SAVE SCREEN BUTTONS
+	//LOG VIEW/SAVE SCREEN BUTTONS
 	//_____________________________________
 	//
 	@Override
@@ -254,13 +247,18 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 	}
 
 	public void saveClearLogButton() {
+
 		Log.i(EVENT, "MainActivity() saveClearLogButton()");
 			
 		washLog = new Record[0];
+		goToHomeScreen();
 		
 		updateStatus("**LOG CLEARED**");
 	}
 	
+	//RECORD SAVING/EDITING TASKS
+	//_____________________________________
+	//
 	//GETS CALLED BY ProcessRecord OR ProcessRecordEdit TO SAVE THE PROCESS FRAGMENT'S RECORD INTO THE LOG
 	@Override
 	public void saveRecordToLog() {
@@ -272,13 +270,13 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		//GET A RECORD FROM THE RUNNING ProcessRecordFragment AND ADD IT TO THE ARRAY IN THE POSITION IS WAS RECIEVED FROM (lastSelection SET IN editSelectedRecord)
 		Record newRecord = recordFrag.getRecord();
 		addRecordToLog(newRecord, lastSelection);
+		
+		goToHomeScreen();
 
 		updateStatus("**RECORD " + lastSelection + " SAVED**");
 		
 		lastSelection = -1;
 		
-		goToHomeScreen();
-
 	}
 
 	//GETS CALLED BY LogViewMenu, SETS UP THE RECORD FOR EDITING
@@ -293,7 +291,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 		ProcessRecordFragment recordFrag = new ProcessRecordFragment();		
-		ProcessRecordEditMenuFrag recordMenuFrag = new ProcessRecordEditMenuFrag();
+		RecordEditMenuFrag recordMenuFrag = new RecordEditMenuFrag();
 		fragmentTransition(recordFrag, "RecordFrag", recordMenuFrag, "RecordMenuFrag");
 
 		//SET THE FIELDS IN THE ProcessRecordFragment USING THE SELECTED ID FROM THE ListView
@@ -303,6 +301,9 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		
 	}
 	
+	//ACTIVITY METHODS
+	//_____________________________________
+	//
 	private int logHasSelection() { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity selectionTrue()");
 
@@ -384,8 +385,8 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 					//SETUP THE DIRECTORY AND FILE FOR WRITING
 					String root = Environment.getExternalStorageDirectory().toString();
-					File directory = new File(root + "/JSON");
-					String filename = "testJSON.json";
+					File directory = new File(root + "/ERAC E-Log");
+					String filename = "tempLog.json";
 					directory.mkdirs();
 					File file = new File (directory, filename);
 
@@ -416,8 +417,8 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 				//SETUP THE DIRECTORY AND FILE FOR READING
 				String root = Environment.getExternalStorageDirectory().toString();
-				File directory = new File(root + "/JSON");
-				String filename = "testJSON.json";
+				File directory = new File(root + "/ERAC E-Log");
+				String filename = "tempLog.json";
 				File file = new File (directory, filename);
 
 				//GET REFERENCES TO READER AND STRING BUILDER
@@ -479,8 +480,8 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 		//SETUP THE DIRECTORY AND FILE FOR WRITING
 		String root = Environment.getExternalStorageDirectory().toString();
-		File directory = new File(root + "/JSON");
-		String filename = "testCSV.csv";
+		File directory = new File(root + "/ERAC E-Log");
+		String filename = "Saved Log.csv";
 		directory.mkdirs();
 		File file = new File (directory, filename);
 
@@ -572,6 +573,15 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		fragmentTransition(homeFrag, "HomeFrag");
 		
 		updateStatus("**AT HOME**");
+	}
+
+	//ALLOWS THE PROGRAM TO UPDATE THE STATUS TAB AT THE BOTTOM OF THE SCREEN
+	private void updateStatus(String string) { //ACTIVITY METHOD
+		Log.i(EVENT, "MainActivity updateStatus() --> " + string);
+
+		TextView statusText = (TextView) findViewById(R.id.current_status);
+		statusText.setText(string);
+		
 	}
 
 }

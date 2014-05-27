@@ -10,19 +10,18 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class ProcessRecordEditMenuFrag extends Fragment implements OnClickListener {
+public class RecordEditMenuFrag extends Fragment implements OnClickListener {
 
-    @SuppressWarnings("unused")
 	private static final String EVENT = "Event";
     private static final String LIFE = "LifeCycle";
 
 	Button saveButton;
 	Button cancelButton;
 	
-    ProcessRecordEditMenuFragInterface activityCallback;
+    RecordEditMenuFragInterface activityCallback;
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
-    public interface ProcessRecordEditMenuFragInterface {
+    public interface RecordEditMenuFragInterface {
         public void goToHomeScreen();
         public void saveRecordToLog();
     }
@@ -31,13 +30,13 @@ public class ProcessRecordEditMenuFrag extends Fragment implements OnClickListen
     @Override
     public void onAttach(Activity activity) { 
         super.onAttach(activity);
-		Log.i(LIFE, "ProcessRecordEditMenuFrag onAttach");
+		Log.i(LIFE, "RecordEditMenuFrag onAttach");
         
         try {
-            activityCallback = (ProcessRecordEditMenuFragInterface) activity;
+            activityCallback = (RecordEditMenuFragInterface) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement ProcessRecordMenuFragInterface");
+                    + " must implement RecordEditMenuFragInterface");
         }
         
     }
@@ -45,10 +44,10 @@ public class ProcessRecordEditMenuFrag extends Fragment implements OnClickListen
     //THIS SECTION SETS BUTTON LISTENERS
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.i(LIFE, "ProcessRecordEditMenuFrag onCreateView");
+		Log.i(LIFE, "RecordEditMenuFrag onCreateView");
         
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
-        View rootView = inflater.inflate(R.layout.process_record_edit_menu, container, false);
+        View rootView = inflater.inflate(R.layout.record_edit_menu, container, false);
         
         //SET BUTTON CLICK LISTENERS
         cancelButton = (Button) rootView.findViewById(R.id.record_edit_cancel_button);
@@ -62,14 +61,17 @@ public class ProcessRecordEditMenuFrag extends Fragment implements OnClickListen
 	//THIS SECTION IS ACTIVATED WHEN A BUTTON IS CLICKED
 	@Override  
     public void onClick(View v) { 
+        Log.i(LIFE, "RecordEditMenuFrag onClick");
 		
 		switch (v.getId()) {
 		
 		//ADDING CASES FOR DIFFERENT BUTTON IDS
 		case R.id.record_edit_save_button:
+	    	Log.i(EVENT, "RecordEditMenuFrag calling saveRecordToLog()");
 			activityCallback.saveRecordToLog();
 			break;
 		case R.id.record_edit_cancel_button:
+	    	Log.i(EVENT, "RecordEditMenuFrag calling goToHomeScreen()");
 			activityCallback.goToHomeScreen();
 			break;
 		}

@@ -12,7 +12,6 @@ import android.widget.Button;
 
 public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
 
-	@SuppressWarnings("unused")
 	private static final String EVENT = "Event";
     private static final String LIFE = "LifeCycle";
 
@@ -68,9 +67,11 @@ public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
 		
 		//ADDING CASES FOR DIFFERENT BUTTON IDS
 		case R.id.process_record_add_button:
+	    	Log.i(EVENT, "ProcessRecordFrag calling saveRecordToLog()");
 			activityCallback.saveRecordToLog();
 			break;
 		case R.id.process_record_cancel_button:
+	    	Log.i(EVENT, "RecordEditMenuFrag calling goToHomeScreen()");
 			activityCallback.goToHomeScreen();
 			break;
 		}

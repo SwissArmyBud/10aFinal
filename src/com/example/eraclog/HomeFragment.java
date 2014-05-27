@@ -26,7 +26,6 @@ public class HomeFragment extends Fragment implements OnClickListener {
         public void homeAddRecordButtonPush();
         public void homeViewLogButton();
         public void homeSaveLogButton();
-        public void updateStatus(String string);
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -72,14 +71,15 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		
 		//adding cases for different BUTTON ids
 	    case R.id.home_add_record_button:
-	    	Log.i(EVENT, "HomeFrag calling addRecord()");
+	    	Log.i(EVENT, "HomeFrag calling homeAddRecordButtonPush()");
 	    	activityCallback.homeAddRecordButtonPush();
 	        break;
 	    case R.id.home_view_log_button:
-	    	Log.i(EVENT, "HomeFrag calling viewLog()");
+	    	Log.i(EVENT, "HomeFrag calling homeViewLogButton()");
 	    	activityCallback.homeViewLogButton();
 	        break;
 	    case R.id.home_manage_log_button:
+	    	Log.i(EVENT, "HomeFrag calling homeSaveLogButton()");
 				activityCallback.homeSaveLogButton();
 	        break;
 	        

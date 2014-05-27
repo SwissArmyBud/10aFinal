@@ -1,6 +1,5 @@
 package com.example.eraclog;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -22,27 +21,6 @@ public class ProcessRecordFragment extends Fragment implements OnSeekBarChangeLi
 	Record[] washLog;
 	SeekBar seekbar;
 	int selection;
-	
-    ProcessRecordFragInterface activityCallback;
-
-    //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
-    public interface ProcessRecordFragInterface {
-        public void updateStatus(String string);
-    }
-
-	//THIS SECTION ENSURES INTERFACE COMPLIANCE
-    @Override
-    public void onAttach(Activity activity) { 
-        super.onAttach(activity);
-		Log.i(LIFE, "ProcessRecordFragment onAttach");
-        
-        try {
-            activityCallback = (ProcessRecordFragInterface) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement ProcessRecordFragInterface");
-        }
-    }
 
     //THIS SECTION SETS BUTTON LISTENERS
 	@Override
@@ -113,10 +91,8 @@ public class ProcessRecordFragment extends Fragment implements OnSeekBarChangeLi
 		milesInput.setText(washLog[selection].getMilesRecord());
 		vinInput.setText(washLog[selection].getVinRecord());
 		
-		//SETTING GAS LEVEL TO 4/8 SEEMS TO BE THE ONLY WAY TO MAKE THIS WORK AND I HAVE NO IDEA WHY TODO
-		//IT SEEMS AS IF THE ONLY TIME THE SEEKBAR DOESN'T SET THE TEXT IS WHEN IN DEFAULT POSITION OF 4 TODO
-		String gasTextVal = "4/8"; 
-		gasText.setText(gasTextVal);  //washLog[selection].getGasLevelRecord());
+		//SETTING GAS LEVEL TO 4/8 FOR DEFAULT VALUE, OTHERWISE SEEKBAR WILL UPDATE AS NEEDED
+		gasText.setText("4/8");
 		
 		pumpedInput.setText(washLog[selection].getGasPumpedRecord());
 		notesInput.setText(washLog[selection].getNotesRecord());
@@ -124,7 +100,6 @@ public class ProcessRecordFragment extends Fragment implements OnSeekBarChangeLi
 		//SETTING THE SEEKBAR
 		seekbar.setProgress(Integer.parseInt(washLog[selection].getGasLevelRecord()));
 		
-		Log.i(EVENT, "Starting to set radio fields");
 		//SETTING RADIO FIELD AND CHECKBOX AREAS
 		String inspectionResult = washLog[selection].getInspectionResultRecord();
 		RadioButton radioButton; 
@@ -143,7 +118,6 @@ public class ProcessRecordFragment extends Fragment implements OnSeekBarChangeLi
 		
 		String petsResult = washLog[selection].getSmokeOrPetsRecord();
 		CheckBox checkBox; 
-		Log.i(EVENT, "petsResult = " + petsResult);
 		if (petsResult.equals(Record.smokeOrPetsConverter(1))) {
 			checkBox = (CheckBox) getView().findViewById(R.id.pets_confirm);
 			checkBox.setChecked(false);
@@ -201,17 +175,14 @@ public class ProcessRecordFragment extends Fragment implements OnSeekBarChangeLi
 				radioButton = (RadioButton) getView().findViewById(R.id.inspection_yesOK);
 					if (radioButton.isChecked()) {
 						tempInspection = Record.inspectionResultConverter(1);
-						Log.i(EVENT, "Inspection result --> " + tempInspection);
 					}
 				radioButton = (RadioButton) getView().findViewById(R.id.inspection_no);
 					if (radioButton.isChecked()) {
 						tempInspection = Record.inspectionResultConverter(2);
-						Log.i(EVENT, "Inspection result --> " + tempInspection);
 					}
 				radioButton = (RadioButton) getView().findViewById(R.id.inspection_dx);
 					if (radioButton.isChecked()) {
 						tempInspection = Record.inspectionResultConverter(3);
-						Log.i(EVENT, "Inspection result --> " + tempInspection);
 					}
 				
 				//GETTING DATA FROM THE CHECKBOXES

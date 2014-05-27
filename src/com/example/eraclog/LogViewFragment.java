@@ -1,6 +1,5 @@
 package com.example.eraclog;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,27 +21,6 @@ public class LogViewFragment extends Fragment {
     ArrayAdapter<String> listAdapter ;
     View lastTouchedView;
     private int lastPos = -1;
-
-    LogUpdateStatus activityCallback;
-
-    //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
-    public interface LogUpdateStatus {
-        public void updateStatus(String string);
-    }
-
-	//THIS SECTION ENSURES INTERFACE COMPLIANCE
-    @Override
-    public void onAttach(Activity activity) { 
-        super.onAttach(activity);
-		Log.i(LIFE, "ProcessRecordFragment onAttach");
-        
-        try {
-            activityCallback = (LogUpdateStatus) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement UpdateStatus Interface");
-        }
-    }
 
     //THIS SECTION SETS BUTTON LISTENERS
 	@Override

@@ -92,7 +92,7 @@ public class LogSaveFragment extends Fragment implements OnClickListener {
 			activityCallback.saveClearLogButton();
 	        break;
 	    case R.id.log_cancel_button:
-	    	Log.i(EVENT, "SaveLog calling saveCancelButton()");
+	    	Log.i(EVENT, "SaveLog calling goToHomeScreen()");
 			activityCallback.goToHomeScreen();
 	        break;
 	        

@@ -107,10 +107,7 @@ public class ListAdapter extends ArrayAdapter<Record> {
 	    //ASSIGN THE ANSWER TO THE TEXT HANDLER
 	    notesView.setText("Notes: " + status);
 	    
-	   
-	    
-	    //ASSIGN ARRAY VALUES VIA VIEW MANAGERS
-	    
+	    //RETURN THE FINAL INDIVIDUALLY ADAPTED VIEW
 	    return convertView;
 	}
 
