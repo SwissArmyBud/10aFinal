@@ -28,7 +28,7 @@ public class ListAdapter extends ArrayAdapter<Record> {
 
 	    //INFLATE THE VIEW AND CHOOSE THE LAYOUT FILE
 	    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    convertView = inflater.inflate(R.layout.record_list_row, parent, false);
+	    convertView = inflater.inflate(R.layout.list_adapter, parent, false);
 
 	    //ASSIGN VIEW MANAGERS VIA VIEW IDS
 	    TextView vinView = (TextView) convertView.findViewById(R.id.vin_slot);

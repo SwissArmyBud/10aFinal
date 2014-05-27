@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class FragmentOne extends Fragment implements OnClickListener {
+public class SimpleFragment extends Fragment implements OnClickListener {
 
 	Button mainButton;
     private static final String EVENT = "Event";
@@ -43,7 +43,7 @@ public class FragmentOne extends Fragment implements OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
-        View rootView = inflater.inflate(R.layout.fragment_one, container, false);
+        View rootView = inflater.inflate(R.layout.simple_fragment, container, false);
         
         //SET BUTTON CLICK LISTENERS
         mainButton = (Button) rootView.findViewById(R.id.main_button);

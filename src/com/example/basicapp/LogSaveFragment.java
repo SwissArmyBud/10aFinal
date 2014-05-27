@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class SaveLogFragment extends Fragment implements OnClickListener {
+public class LogSaveFragment extends Fragment implements OnClickListener {
 
 	Button saveLogButton;
 	Button loadLogButton;

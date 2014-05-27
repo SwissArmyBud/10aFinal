@@ -19,7 +19,7 @@ import com.example.basicapp.LogViewMenuFrag.LogViewMenuFragInterface;
 import com.example.basicapp.ProcessRecordEditMenuFrag.ProcessRecordEditMenuFragInterface;
 import com.example.basicapp.ProcessRecordFragment.ProcessRecordFragInterface;
 import com.example.basicapp.ProcessRecordMenuFrag.ProcessRecordMenuFragInterface;
-import com.example.basicapp.SaveLogFragment.SaveLogFragInterface;
+import com.example.basicapp.LogSaveFragment.SaveLogFragInterface;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -62,7 +62,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		Log.i(LIFE, "onCreate");
 
 		//SETTING ROOT VIEW
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.main_activity);
 
 		//INJECTING FRAGMENTS INTO ROOT VIEW
 		if (savedInstanceState != null) {
@@ -183,6 +183,13 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		
 	}
 
+	public static Record[] getCurrentLog() {
+		Log.i(EVENT, "MainActivity getCurrentLog()");
+
+		//RETURN WHATEVER THE CURRENT WASH LOG IS
+		return washLog;
+	}
+	
 	//THIS AREA IS FOR THE HOME SCREEN BUTTONS
 	//_____________________________________
 	//
@@ -215,7 +222,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		Log.i(EVENT, "MainActivity homeSaveLogButton()");
 
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
-		SaveLogFragment saveLogFrag = new SaveLogFragment();
+		LogSaveFragment saveLogFrag = new LogSaveFragment();
 		fragmentTransition(saveLogFrag, "SaveLogFrag");
 		
 		updateStatus("**MANAGING LOG**");
@@ -294,12 +301,14 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		}
 		
 	}
+	
+	private int logHasSelection() { //ACTIVITY METHOD
+		Log.i(EVENT, "MainActivity selectionTrue()");
 
-	public static Record[] getCurrentLog() {
-		Log.i(EVENT, "MainActivity getCurrentLog()");
+		//FIND THE LOG FRAGMENT WHILE IT IS STILL RUNNING AND EXTRACT THE SELECTION VALUE
+		LogViewFragment logViewFrag = (LogViewFragment) getSupportFragmentManager().findFragmentByTag("LogViewFrag");
 
-		//RETURN WHATEVER THE CURRENT WASH LOG IS
-		return washLog;
+		return logViewFrag.hasSelection();
 	}
 
 	private void addRecordToLog(Record record, int selection){ //ACTIVITY METHOD
@@ -318,7 +327,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		}
 		
 	}
-
+	
 	private void addHeadersToLog(){ //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity addHeadersToLog()");
 
@@ -329,16 +338,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		washLog = newArray;
 		
 	}
-
-	private int logHasSelection() { //ACTIVITY METHOD
-		Log.i(EVENT, "MainActivity selectionTrue()");
-
-		//FIND THE LOG FRAGMENT WHILE IT IS STILL RUNNING AND EXTRACT THE SELECTION VALUE
-		LogViewFragment logViewFrag = (LogViewFragment) getSupportFragmentManager().findFragmentByTag("LogViewFrag");
-
-		return logViewFrag.hasSelection();
-	}
-
+	
 	private void saveLogInternalStorage () { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity saveLogInternalStorage()");
 

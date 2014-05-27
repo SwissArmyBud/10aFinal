@@ -55,7 +55,7 @@ public class LogViewFragment extends Fragment {
         
         //GET AND ATTACH A ListViewAdapter TO listView
         listView = (ListView) rootView.findViewById(R.id.log_list_view);
-        final ListAdapter adapter = new ListAdapter(getActivity(), R.layout.record_list_row, MainActivity.getCurrentLog());
+        final ListAdapter adapter = new ListAdapter(getActivity(), R.layout.list_adapter, MainActivity.getCurrentLog());
         listView.setAdapter(adapter);
         
         //LISTVIEW OnClick LISTENER FOR CLICK EVENTS
