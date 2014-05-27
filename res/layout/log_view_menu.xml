@@ -5,14 +5,14 @@
     android:orientation="horizontal" >
 
     <Button
-        android:id="@+id/log_menu_cancel"
+        android:id="@+id/log_view_cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_weight="1"
         android:text="Cancel" />
 
     <Button
-        android:id="@+id/log_menu_edit"
+        android:id="@+id/log_view_edit_button"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_weight="1"

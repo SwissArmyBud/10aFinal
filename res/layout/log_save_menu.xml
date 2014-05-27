@@ -28,7 +28,7 @@
         </RelativeLayout>
 
         <Button
-            android:id="@+id/save_log_button"
+            android:id="@+id/log_save_button"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="2"
@@ -36,7 +36,7 @@
             android:textSize="20dp" />
 
         <Button
-            android:id="@+id/load_log_button"
+            android:id="@+id/log_load_button"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="2"
@@ -44,7 +44,7 @@
             android:textSize="20dp" />
 
         <Button
-            android:id="@+id/save_cancel"
+            android:id="@+id/log_cancel_button"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"

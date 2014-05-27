@@ -183,6 +183,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		
 	}
 
+	//RETURNS THE CURRENT washLog
 	public static Record[] getCurrentLog() {
 		Log.i(EVENT, "MainActivity getCurrentLog()");
 
@@ -260,7 +261,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		updateStatus("**LOG CLEARED**");
 	}
 	
-	//GETS CALLED TO SAVE THE PROCESS FRAGMENT RECORD INTO THE LOG
+	//GETS CALLED BY ProcessRecord OR ProcessRecordEdit TO SAVE THE PROCESS FRAGMENT'S RECORD INTO THE LOG
 	@Override
 	public void saveRecordToLog() {
 		Log.i(EVENT, "MainActivity saveRecordButtonPush()");
@@ -280,7 +281,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 	}
 
-	//GETS CALLED BY THE LOG VIEW MENU, SETS UP THE RECORD FOR EDITING
+	//GETS CALLED BY LogViewMenu, SETS UP THE RECORD FOR EDITING
 	@Override
 	public void editSelectedRecord() {
 		Log.i(EVENT, "MainActivity editSelectedRecord() selection --> " + logHasSelection());

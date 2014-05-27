@@ -58,13 +58,13 @@ public class LogSaveFragment extends Fragment implements OnClickListener {
     	Button cancelButton;
         
         //SET BUTTON CLICK LISTENERS
-    	saveLogButton = (Button) rootView.findViewById(R.id.save_log_button);
+    	saveLogButton = (Button) rootView.findViewById(R.id.log_save_button);
     	saveLogButton.setOnClickListener(this); 
-    	loadLogButton = (Button) rootView.findViewById(R.id.load_log_button);
+    	loadLogButton = (Button) rootView.findViewById(R.id.log_load_button);
     	loadLogButton.setOnClickListener(this); 
     	clearLogButton = (Button) rootView.findViewById(R.id.log_clear_button);
     	clearLogButton.setOnClickListener(this); 
-    	cancelButton = (Button) rootView.findViewById(R.id.save_cancel);
+    	cancelButton = (Button) rootView.findViewById(R.id.log_cancel_button);
     	cancelButton.setOnClickListener(this);
     	
         //RETURN THE VIEW
@@ -79,11 +79,11 @@ public class LogSaveFragment extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		
 		//adding cases for different BUTTON ids
-	    case R.id.load_log_button:
+	    case R.id.log_load_button:
 	    	Log.i(EVENT, "SaveLog calling saveLoadLogButton()");
 	    	activityCallback.saveLoadLogButton();
 	        break;
-	    case R.id.save_log_button:
+	    case R.id.log_save_button:
 	    	Log.i(EVENT, "SaveLog calling saveSaveLogButton()");
 	    	activityCallback.saveSaveLogButton();
 	        break;
@@ -91,7 +91,7 @@ public class LogSaveFragment extends Fragment implements OnClickListener {
 	    	Log.i(EVENT, "SaveLog calling saveClearLogButton()");
 			activityCallback.saveClearLogButton();
 	        break;
-	    case R.id.save_cancel:
+	    case R.id.log_cancel_button:
 	    	Log.i(EVENT, "SaveLog calling saveCancelButton()");
 			activityCallback.goToHomeScreen();
 	        break;

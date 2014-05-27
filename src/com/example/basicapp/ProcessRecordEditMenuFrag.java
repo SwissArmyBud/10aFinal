@@ -51,9 +51,9 @@ public class ProcessRecordEditMenuFrag extends Fragment implements OnClickListen
         View rootView = inflater.inflate(R.layout.process_record_edit_menu, container, false);
         
         //SET BUTTON CLICK LISTENERS
-        cancelButton = (Button) rootView.findViewById(R.id.record_cancel);
+        cancelButton = (Button) rootView.findViewById(R.id.record_edit_cancel_button);
         cancelButton.setOnClickListener(this); 
-        saveButton = (Button) rootView.findViewById(R.id.save_record_button);
+        saveButton = (Button) rootView.findViewById(R.id.record_edit_save_button);
         saveButton.setOnClickListener(this);
         
         return rootView;
@@ -66,10 +66,10 @@ public class ProcessRecordEditMenuFrag extends Fragment implements OnClickListen
 		switch (v.getId()) {
 		
 		//ADDING CASES FOR DIFFERENT BUTTON IDS
-		case R.id.save_record_button:
+		case R.id.record_edit_save_button:
 			activityCallback.saveRecordToLog();
 			break;
-		case R.id.record_cancel:
+		case R.id.record_edit_cancel_button:
 			activityCallback.goToHomeScreen();
 			break;
 		}

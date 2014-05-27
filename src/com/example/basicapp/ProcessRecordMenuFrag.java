@@ -52,9 +52,9 @@ public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
         View rootView = inflater.inflate(R.layout.process_record_menu, container, false);
         
         //SET BUTTON CLICK LISTENERS
-        cancelButton = (Button) rootView.findViewById(R.id.record_cancel);
+        cancelButton = (Button) rootView.findViewById(R.id.process_record_cancel_button);
         cancelButton.setOnClickListener(this); 
-        addButton = (Button) rootView.findViewById(R.id.commit_record_button);
+        addButton = (Button) rootView.findViewById(R.id.process_record_add_button);
         addButton.setOnClickListener(this);
         
         return rootView;
@@ -67,10 +67,10 @@ public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		
 		//ADDING CASES FOR DIFFERENT BUTTON IDS
-		case R.id.commit_record_button:
+		case R.id.process_record_add_button:
 			activityCallback.saveRecordToLog();
 			break;
-		case R.id.record_cancel:
+		case R.id.process_record_cancel_button:
 			activityCallback.goToHomeScreen();
 			break;
 		}

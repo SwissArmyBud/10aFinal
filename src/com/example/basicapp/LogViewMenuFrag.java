@@ -51,9 +51,9 @@ public class LogViewMenuFrag extends Fragment implements OnClickListener {
         View rootView = inflater.inflate(R.layout.log_view_menu, container, false);
         
         //SET BUTTON CLICK LISTENERS
-        homeButton = (Button) rootView.findViewById(R.id.log_menu_cancel);
+        homeButton = (Button) rootView.findViewById(R.id.log_view_cancel_button);
         homeButton.setOnClickListener(this); 
-        editButton = (Button) rootView.findViewById(R.id.log_menu_edit);
+        editButton = (Button) rootView.findViewById(R.id.log_view_edit_button);
         editButton.setOnClickListener(this); 
         
         //RETURN THE VIEW
@@ -68,10 +68,10 @@ public class LogViewMenuFrag extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		
 		//ADDING CASES FOR DIFFERENT BUTTON IDS
-		case R.id.log_menu_cancel:
+		case R.id.log_view_cancel_button:
 			activityCallback.goToHomeScreen();
 			break;
-		case R.id.log_menu_edit:
+		case R.id.log_view_edit_button:
 			activityCallback.editSelectedRecord();
 			break;
 		}

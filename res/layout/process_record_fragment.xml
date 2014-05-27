@@ -65,7 +65,7 @@
             android:textSize="30dp" />
 
         <SeekBar
-            android:id="@+id/gas_seek_bar"
+            android:id="@+id/gas_seek_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -162,8 +162,6 @@
                     android:id="@+id/inspection_yesOK"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:enabled="true"
                     android:text="OK" />
 
                 <RadioButton
@@ -177,7 +175,6 @@
                     android:id="@+id/inspection_dx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
                     android:text="DX" />
 
             </RadioGroup>

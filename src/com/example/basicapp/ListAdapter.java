@@ -31,12 +31,12 @@ public class ListAdapter extends ArrayAdapter<Record> {
 	    convertView = inflater.inflate(R.layout.list_adapter, parent, false);
 
 	    //ASSIGN VIEW MANAGERS VIA VIEW IDS
-	    TextView vinView = (TextView) convertView.findViewById(R.id.vin_slot);
-	    TextView milesView = (TextView) convertView.findViewById(R.id.miles_slot);
-	    TextView fuelLevelView = (TextView) convertView.findViewById(R.id.fuel_slot);
-	    TextView pumpedView = (TextView) convertView.findViewById(R.id.pumped_slot);
-	    TextView inspectionView = (TextView) convertView.findViewById(R.id.inspection_slot);
-	    TextView notesView = (TextView) convertView.findViewById(R.id.notes_slot);
+	    TextView vinView = (TextView) convertView.findViewById(R.id.list_adapter_vin_slot);
+	    TextView milesView = (TextView) convertView.findViewById(R.id.list_adapter_miles_slot);
+	    TextView fuelLevelView = (TextView) convertView.findViewById(R.id.list_adapter_fuel_slot);
+	    TextView pumpedView = (TextView) convertView.findViewById(R.id.list_adapter_pumped_slot);
+	    TextView inspectionView = (TextView) convertView.findViewById(R.id.list_adapter_inspection_slot);
+	    TextView notesView = (TextView) convertView.findViewById(R.id.list_adapter_notes_slot);
 	    
 	    //ASSIGN A SIMPLE ANSWER FOR THE VIN RECORD
 	    Record record = new Record();

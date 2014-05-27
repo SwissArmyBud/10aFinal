@@ -53,7 +53,7 @@ public class ProcessRecordFragment extends Fragment implements OnSeekBarChangeLi
         View rootView = inflater.inflate(R.layout.process_record_fragment, container, false);
         
         //SET SEEK LISTENER
-        seekbar = (SeekBar) rootView.findViewById(R.id.gas_seek_bar);
+        seekbar = (SeekBar) rootView.findViewById(R.id.gas_seek_input);
 	    seekbar.setOnSeekBarChangeListener(this);
 	    
 	    //RETURN THE VIEW
@@ -106,7 +106,7 @@ public class ProcessRecordFragment extends Fragment implements OnSeekBarChangeLi
 		EditText notesInput = (EditText) getView().findViewById(R.id.notes_input);
 		
 		//ATTACHING INPUT HANDLE FOR SEEK BAR
-		SeekBar seekbar = (SeekBar) getView().findViewById(R.id.gas_seek_bar);
+		SeekBar seekbar = (SeekBar) getView().findViewById(R.id.gas_seek_input);
 		
 		//ASSIGNING VALUES TO ATTACHED TEXT FIELDS
 		eracInput.setText(washLog[selection].getEmployeeNumberRecord());
@@ -183,7 +183,7 @@ public class ProcessRecordFragment extends Fragment implements OnSeekBarChangeLi
 				EditText notesInput = (EditText) getView().findViewById(R.id.notes_input);
 				
 				//ATTACHING INPUT HANDLE FOR SEEK BAR
-				SeekBar seekbar = (SeekBar) getView().findViewById(R.id.gas_seek_bar);
+				SeekBar seekbar = (SeekBar) getView().findViewById(R.id.gas_seek_input);
 				
 				//GETTING VALUES FROM ATTACHED TEXT FIELDS
 				String tempVIN = vinInput.getText().toString();
