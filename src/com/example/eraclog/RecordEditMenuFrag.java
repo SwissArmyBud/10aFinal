@@ -61,7 +61,7 @@ public class RecordEditMenuFrag extends Fragment implements OnClickListener {
 	//THIS SECTION IS ACTIVATED WHEN A BUTTON IS CLICKED
 	@Override  
     public void onClick(View v) { 
-        Log.i(LIFE, "RecordEditMenuFrag onClick");
+        Log.i(EVENT, "RecordEditMenuFrag onClick");
 		
 		switch (v.getId()) {
 		

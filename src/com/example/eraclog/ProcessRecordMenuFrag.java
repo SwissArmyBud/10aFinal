@@ -61,7 +61,8 @@ public class ProcessRecordMenuFrag extends Fragment implements OnClickListener {
 	
 	//THIS SECTION IS ACTIVATED WHEN A BUTTON IS CLICKED
 	@Override  
-    public void onClick(View v) { 
+    public void onClick(View v) {
+		Log.i(EVENT, "ProcessRecordMenuFrag onClick");
 		
 		switch (v.getId()) {
 		

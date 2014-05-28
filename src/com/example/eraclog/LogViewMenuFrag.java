@@ -22,7 +22,7 @@ public class LogViewMenuFrag extends Fragment implements OnClickListener {
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
     public interface LogViewMenuFragInterface {
-        public void editSelectedRecord();
+        public void viewEditRecordButton();
         public void goToHomeScreen();
     }
 
@@ -62,7 +62,7 @@ public class LogViewMenuFrag extends Fragment implements OnClickListener {
 	//THIS SECTION IS ACTIVATED WHEN A BUTTON IS CLICKED
 	@Override  
     public void onClick(View v) { 
-        Log.i(LIFE, "LogViewMenuFrag onClick");
+        Log.i(EVENT, "LogViewMenuFrag onClick");
 		
 		switch (v.getId()) {
 		
@@ -73,7 +73,7 @@ public class LogViewMenuFrag extends Fragment implements OnClickListener {
 			break;
 		case R.id.log_view_edit_button:
 	    	Log.i(EVENT, "LogViewMenuFrag calling editSelectedRecord()");
-			activityCallback.editSelectedRecord();
+			activityCallback.viewEditRecordButton();
 			break;
 		}
     }

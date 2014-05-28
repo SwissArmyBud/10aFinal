@@ -49,7 +49,7 @@ public class LogSaveFragment extends Fragment implements OnClickListener {
 		Log.i(LIFE, "HomeFragment onCreateView");
         
 		//INFLATE THE LAYOUT FOR THIS FRAGMENT
-        View rootView = inflater.inflate(R.layout.log_save_menu, container, false);
+        View rootView = inflater.inflate(R.layout.log_save_fragment, container, false);
         
         
         Button saveLogButton;
@@ -74,7 +74,7 @@ public class LogSaveFragment extends Fragment implements OnClickListener {
 	//THIS SECTION IS ACTIVATED WHEN A BUTTON IS CLICKED
 	@Override  
     public void onClick(View v) { 
-		Log.i(LIFE, "HomeFragment onClick");
+		Log.i(EVENT, "HomeFragment onClick");
 		
 		switch (v.getId()) {
 		

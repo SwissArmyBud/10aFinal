@@ -23,7 +23,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
     //CONTAINER ACTIVITY MUST IMPLEMENT THIS INTERFACE
     public interface HomeFragmentInterface {
-        public void homeAddRecordButtonPush();
+        public void homeAddRecordButton();
         public void homeViewLogButton();
         public void homeSaveLogButton();
     }
@@ -65,14 +65,14 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	//THIS SECTION IS ACTIVATED WHEN A BUTTON IS CLICKED
 	@Override  
     public void onClick(View v) { 
-		Log.i(LIFE, "HomeFragment onClick");
+		Log.i(EVENT, "HomeFragment onClick");
 		
 		switch (v.getId()) {
 		
 		//adding cases for different BUTTON ids
 	    case R.id.home_add_record_button:
-	    	Log.i(EVENT, "HomeFrag calling homeAddRecordButtonPush()");
-	    	activityCallback.homeAddRecordButtonPush();
+	    	Log.i(EVENT, "HomeFrag calling homeAddRecordButton()");
+	    	activityCallback.homeAddRecordButton();
 	        break;
 	    case R.id.home_view_log_button:
 	    	Log.i(EVENT, "HomeFrag calling homeViewLogButton()");

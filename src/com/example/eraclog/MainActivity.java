@@ -18,6 +18,7 @@ import com.example.eraclog.LogSaveFragment.SaveLogFragInterface;
 import com.example.eraclog.LogViewMenuFrag.LogViewMenuFragInterface;
 import com.example.eraclog.RecordEditMenuFrag.RecordEditMenuFragInterface;
 import com.example.eraclog.ProcessRecordMenuFrag.ProcessRecordMenuFragInterface;
+import com.example.eraclog.SettingsPageMenuFrag.SettingsPageMenuFragInterface;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,12 +30,18 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-public class MainActivity extends FragmentActivity implements SaveLogFragInterface, RecordEditMenuFragInterface, HomeFragmentInterface, ProcessRecordMenuFragInterface, LogViewMenuFragInterface {
+public class MainActivity extends FragmentActivity implements SaveLogFragInterface, RecordEditMenuFragInterface, HomeFragmentInterface, ProcessRecordMenuFragInterface, LogViewMenuFragInterface, SettingsPageMenuFragInterface {
 
 	private static final String LIFE = "LifeCycle";
 	private static final String EVENT = "Event";
 	private static Record[] washLog = {};
 	private int lastSelection = -1;
+	
+	//GLOBAL PROGRAM SETTINGS
+	JSONObject settingsJSON;
+	public static String defaultCSVFilename = "Saved Log";
+	public static String defaultERACNumber = "E863PB";
+	public static String defaultBranch = "23DP";
 
 	/* _____________________________
 	 * 
@@ -76,6 +83,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		Log.i(LIFE, "onStart");
 
 		loadLogInternalStorage();
+		loadSettingsFromJSON();
 
 	}
 
@@ -163,6 +171,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		//THE "SETTINGS" BUTTON
 		case R.id.settings_button:
 			Log.i(EVENT, "SETTINGS PRESSED");
+			goToSettingsPage();
 			break;
 
 		}
@@ -183,12 +192,14 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		//RETURN WHATEVER THE CURRENT WASH LOG IS
 		return washLog;
 	}
+
+	/***NOTE***!!!--- ALL NON ACTIVITY METHODS PAST HERE REQUIRE updateStatus() AT FINISH ---!!!***NOTE***/
 	
-	//HOME SCREEN BUTTONS
+	//BUTTON CALLBACK METHODS 
 	//_____________________________________
 	//
 	@Override
-	public void homeAddRecordButtonPush() {
+ 	public void homeAddRecordButton() {
 		Log.i(EVENT, "MainActivity homeAddRecordButtonPush()");
 
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
@@ -222,9 +233,6 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		updateStatus("**MANAGING LOG**");
 	}
 	
-	//LOG VIEW/SAVE SCREEN BUTTONS
-	//_____________________________________
-	//
 	@Override
 	public void saveLoadLogButton() {
 		Log.i(EVENT, "MainActivity saveLoadLogButton()");
@@ -247,19 +255,55 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 	}
 
 	public void saveClearLogButton() {
-
 		Log.i(EVENT, "MainActivity() saveClearLogButton()");
-			
+
 		washLog = new Record[0];
 		goToHomeScreen();
-		
+
 		updateStatus("**LOG CLEARED**");
 	}
-	
-	//RECORD SAVING/EDITING TASKS
+
+	public void settingsSaveButton() {
+		Log.i(EVENT, "MainActivity() settingsSaveButton()");
+		
+		//FIND THE LOG FRAGMENT WHILE IT IS STILL RUNNING AND EXTRACT THE SETTINGS IN JSON FORMAT
+		SettingsPageFragment settingsPageFrag = (SettingsPageFragment) getSupportFragmentManager().findFragmentByTag("SettingsFrag");
+		settingsJSON = settingsPageFrag.getSettingsInJSON();
+		
+		try {
+		
+		//GET REFERENCE TO WRITERS
+		FileOutputStream fileStream = null; 
+		OutputStreamWriter streamWriter = null;
+		BufferedOutputStream bufferedStream = null;
+
+		//SETUP THE DIRECTORY AND FILE FOR WRITING
+		String root = Environment.getExternalStorageDirectory().toString();
+		File directory = new File(root + "/ERAC E-Log/temp");
+		String filename = "settings.json";
+		directory.mkdirs();
+		File file = new File (directory, filename);
+
+		//EXECUTE THE JSON WRITE
+		fileStream = new FileOutputStream(file);
+		bufferedStream = new BufferedOutputStream(fileStream);  
+		streamWriter = new OutputStreamWriter(bufferedStream); 
+		streamWriter.write(settingsJSON.toString());
+		bufferedStream.flush();
+		streamWriter.flush(); 
+		streamWriter.close();
+		
+		} catch (IOException e) {e.printStackTrace();} 
+		
+		goToHomeScreen();
+		updateStatus("**SETTINGS SAVED**");
+	}
+
+	//OTHER CALLBACKS
 	//_____________________________________
 	//
-	//GETS CALLED BY ProcessRecord OR ProcessRecordEdit TO SAVE THE PROCESS FRAGMENT'S RECORD INTO THE LOG
+	
+	//GETS CALLED BY ProcessRecord OR ProcessRecordEdit TO SAVE THE FRAGMENT'S RECORD INTO THE LOG
 	@Override
 	public void saveRecordToLog() {
 		Log.i(EVENT, "MainActivity saveRecordButtonPush()");
@@ -281,7 +325,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 	//GETS CALLED BY LogViewMenu, SETS UP THE RECORD FOR EDITING
 	@Override
-	public void editSelectedRecord() {
+	public void viewEditRecordButton() {
 		Log.i(EVENT, "MainActivity editSelectedRecord() selection --> " + logHasSelection());
 
 		if (logHasSelection() != -1) {
@@ -304,6 +348,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 	//ACTIVITY METHODS
 	//_____________________________________
 	//
+	
 	private int logHasSelection() { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity selectionTrue()");
 
@@ -385,7 +430,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 					//SETUP THE DIRECTORY AND FILE FOR WRITING
 					String root = Environment.getExternalStorageDirectory().toString();
-					File directory = new File(root + "/ERAC E-Log");
+					File directory = new File(root + "/ERAC E-Log/temp");
 					String filename = "tempLog.json";
 					directory.mkdirs();
 					File file = new File (directory, filename);
@@ -417,7 +462,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 				//SETUP THE DIRECTORY AND FILE FOR READING
 				String root = Environment.getExternalStorageDirectory().toString();
-				File directory = new File(root + "/ERAC E-Log");
+				File directory = new File(root + "/ERAC E-Log/temp");
 				String filename = "tempLog.json";
 				File file = new File (directory, filename);
 
@@ -469,6 +514,43 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		
 	}
 
+	private void loadSettingsFromJSON () {
+		Log.i(EVENT, "MainActivity loadSettingsFromJSON()");
+		JSONObject inputJSON = null;
+		
+		try {
+			try {
+
+				//SETUP THE DIRECTORY AND FILE FOR READING
+				String root = Environment.getExternalStorageDirectory().toString();
+				File directory = new File(root + "/ERAC E-Log/temp");
+				String filename = "settings.json";
+				File file = new File (directory, filename);
+
+				//GET REFERENCES TO READER AND STRING BUILDER
+				BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+				String input = null;
+				StringBuilder stringBuilder = new StringBuilder();
+
+				//READ FILE WHILE MORE EXISTS
+				while((input = bufferedReader.readLine()) != null) {
+					stringBuilder.append(input);
+				}
+
+				//CLOSE THE READER AND CAST THE RESULTING STRING INTO A JSON OBJECT
+				bufferedReader.close();
+				inputJSON = new JSONObject(stringBuilder.toString());
+
+				//SET THE APPROPRIATE GLOBAL VARIABLES
+				defaultBranch = inputJSON.getString("DEFAULT_BRANCH");
+				defaultERACNumber = inputJSON.getString("ERAC_NUMBER");
+				defaultCSVFilename = inputJSON.getString("FILE_NAME");
+
+
+			} catch (JSONException e) {e.printStackTrace();}
+		} catch (IOException e) {e.printStackTrace();Log.i(EVENT, "SETTINGS FILE NOT AVAILABLE, USING DEFAULTS");}
+	}
+	
 	private void saveLogToCSV() { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity saveLogToCSV()");
 
@@ -481,7 +563,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		//SETUP THE DIRECTORY AND FILE FOR WRITING
 		String root = Environment.getExternalStorageDirectory().toString();
 		File directory = new File(root + "/ERAC E-Log");
-		String filename = "Saved Log.csv";
+		String filename = (defaultCSVFilename + ".csv");
 		directory.mkdirs();
 		File file = new File (directory, filename);
 
@@ -575,6 +657,18 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		updateStatus("**AT HOME**");
 	}
 
+	private void goToSettingsPage() { //ACTIVITY METHOD
+		Log.i(EVENT, "MainActivity goToSettingsPage()");
+		
+		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
+		SettingsPageFragment settingsFrag = new SettingsPageFragment();		
+		SettingsPageMenuFrag settingsMenuFrag = new SettingsPageMenuFrag();
+		fragmentTransition(settingsFrag, "SettingsFrag", settingsMenuFrag, "SettingsMenuFrag");
+		
+		settingsFrag.setFields(settingsJSON);
+		updateStatus("**SETTINGS**");
+	}
+	
 	//ALLOWS THE PROGRAM TO UPDATE THE STATUS TAB AT THE BOTTOM OF THE SCREEN
 	private void updateStatus(String string) { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity updateStatus() --> " + string);

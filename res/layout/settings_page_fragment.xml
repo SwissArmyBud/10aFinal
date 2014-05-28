@@ -1,0 +1,112 @@
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0" >
+
+            <TextView
+                android:id="@+id/settings_erac_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Default ERAC ID#:"
+                android:textSize="25dp" />
+
+            <EditText
+                android:id="@+id/settings_default_erac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="ID#"
+                android:maxLines="1"
+                android:text="E863PB" />
+            
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="Default Branch #:"
+                android:textSize="25sp" />
+
+            <EditText
+                android:id="@+id/settings_default_branch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Branch"
+                android:inputType="text"
+                android:maxLines="1"
+                android:text="23DP" />
+            
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_lay_radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0" >
+
+            <TextView
+                android:id="@+id/settings_date_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save Format:"
+                android:textSize="25dp" />
+
+            <RelativeLayout
+                android:id="@+id/radio_rel_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <RadioGroup
+                    android:id="@+id/radioGroup1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:checkedButton="@integer/abc_max_action_buttons"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/settings_name_radio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Name" />
+
+                    <RadioButton
+                        android:id="@+id/settings_date_radio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date" />
+
+                </RadioGroup>
+                
+            </RelativeLayout>
+            
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/settings_default_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:ems="10"
+            android:enabled="true"
+            android:hint="DEFAULT: Saved Log" >
+
+            <requestFocus />
+        </EditText>
+        
+</LinearLayout>
