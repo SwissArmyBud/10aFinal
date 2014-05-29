@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import org.json.JSONArray;
@@ -16,21 +18,32 @@ import org.json.JSONObject;
 import com.example.eraclog.HomeFragment.HomeFragmentInterface;
 import com.example.eraclog.LogSaveFragment.SaveLogFragInterface;
 import com.example.eraclog.LogViewMenuFrag.LogViewMenuFragInterface;
+import com.example.eraclog.OCRProcessFragment.GoNutsInterface;
 import com.example.eraclog.RecordEditMenuFrag.RecordEditMenuFragInterface;
 import com.example.eraclog.ProcessRecordMenuFrag.ProcessRecordMenuFragInterface;
 import com.example.eraclog.SettingsPageMenuFrag.SettingsPageMenuFragInterface;
+import com.googlecode.tesseract.android.TessBaseAPI;
 
+import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-public class MainActivity extends FragmentActivity implements SaveLogFragInterface, RecordEditMenuFragInterface, HomeFragmentInterface, ProcessRecordMenuFragInterface, LogViewMenuFragInterface, SettingsPageMenuFragInterface {
+public class MainActivity extends FragmentActivity implements SaveLogFragInterface, RecordEditMenuFragInterface, HomeFragmentInterface, ProcessRecordMenuFragInterface, LogViewMenuFragInterface, SettingsPageMenuFragInterface, GoNutsInterface {
 
 	private static final String LIFE = "LifeCycle";
 	private static final String EVENT = "Event";
@@ -42,6 +55,8 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 	public static String defaultCSVFilename = "Saved Log";
 	public static String defaultERACNumber = "E863PB";
 	public static String defaultBranch = "23DP";
+	public static String OCRpath = "";
+	public static String DATA_PATH = "";
 
 	/* _____________________________
 	 * 
@@ -678,4 +693,159 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		
 	}
 
+	@Override
+	public void goNuts() {
+		Log.i(EVENT, "MainActivity goNuts()");
+		
+		OCRProcessFragment OCRFrag = new OCRProcessFragment();
+		fragmentTransition(OCRFrag, "OCRFrag");
+		
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i(EVENT, "MainActivity onActivityResult()");
+
+		Log.i(EVENT, "resultCode: " + resultCode);
+
+		if (resultCode == -1) {
+			onPhotoTaken();
+		} else {Log.i(EVENT, "User cancelled");}
+		
+	}
+	
+	public void beginOCRTask() {
+		Log.i(LIFE, "HomeFragment onCreateView");
+
+		DATA_PATH = Environment.getExternalStorageDirectory().toString() + "/ERAC E-Log/temp/";
+		String lang = "eng";
+		String[] paths = new String[] { DATA_PATH, DATA_PATH + "tessdata/" };
+
+		for (String path : paths) {
+			File dir = new File(path);
+			if (!dir.exists()) {
+				if (!dir.mkdirs()) {
+					Log.i(EVENT, "ERROR: Creation of directory " + path + " on sdcard failed");
+					return;
+				} else {
+					Log.i(EVENT, "Created directory " + path + " on sdcard");
+				}
+			}
+
+		}
+
+		// lang.traineddata file with the app (in assets folder)
+		// You can get them at:
+		// http://code.google.com/p/tesseract-ocr/downloads/list
+		// This area needs work and optimization
+		if (!(new File(DATA_PATH + "tessdata/" + lang + ".traineddata")).exists()) {
+			try {
+
+				AssetManager assetManager = getAssets();
+				InputStream in = assetManager.open("tessdata/" + lang + ".traineddata");
+				OutputStream out = new FileOutputStream(DATA_PATH
+						+ "tessdata/" + lang + ".traineddata");
+
+				// Transfer bytes from in to out
+				byte[] buf = new byte[1024];
+				int len;
+				while ((len = in.read(buf)) > 0) {
+					out.write(buf, 0, len);
+				}
+				in.close();
+				out.close();
+
+				Log.i(EVENT, "Copied " + lang + " traineddata");
+				
+			} catch (IOException e) {Log.i(EVENT, "Was unable to copy " + lang + " traineddata " + e.toString());}
+		}
+
+		OCRpath = DATA_PATH + "/ocr.jpg";
+
+		Log.i(EVENT, "OCRProcessFragment startCameraActivity()");
+		File file = new File(OCRpath);
+		Uri outputFileUri = Uri.fromFile(file);
+
+		final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+
+		startActivityForResult(intent, 0);
+	}
+	
+	protected void onPhotoTaken() {
+
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inSampleSize = 4;
+
+		Bitmap bitmap = BitmapFactory.decodeFile(OCRpath, options);
+
+		try {
+			ExifInterface exif = new ExifInterface(OCRpath);
+			int exifOrientation = exif.getAttributeInt(
+					ExifInterface.TAG_ORIENTATION,
+					ExifInterface.ORIENTATION_NORMAL);
+
+			Log.i(EVENT, "Orient: " + exifOrientation);
+
+			int rotate = 0;
+
+			switch (exifOrientation) {
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				rotate = 90;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				rotate = 180;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				rotate = 270;
+				break;
+			}
+
+			Log.i(EVENT, "Rotation: " + rotate);
+
+			if (rotate != 0) {
+
+				// Getting width & height of the given image.
+				int w = bitmap.getWidth();
+				int h = bitmap.getHeight();
+
+				// Setting pre rotate
+				Matrix mtx = new Matrix();
+				mtx.preRotate(rotate);
+
+				// Rotating Bitmap
+				bitmap = Bitmap.createBitmap(bitmap, 0, 0, w, h, mtx, false);
+			}
+
+			// Convert to ARGB_8888, required by tess
+			bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+		} catch (IOException e) {Log.i(EVENT, "Couldn't correct orientation: " + e.toString());}
+
+		TessBaseAPI baseApi = new TessBaseAPI();
+		baseApi.setDebug(true);
+		baseApi.init(DATA_PATH, "eng");
+		baseApi.setImage(bitmap);
+
+		String recognizedText = baseApi.getUTF8Text();
+
+		baseApi.end();
+
+		Log.i(EVENT, "OCRED TEXT: " + recognizedText);
+
+		recognizedText = recognizedText.replaceAll("[^a-zA-Z0-9.,]+", " ");
+
+		recognizedText = recognizedText.trim();
+		EditText _field = (EditText) findViewById(R.id.go_nuts_field);
+		
+		if ( recognizedText.length() != 0 ) {
+			_field.setText(recognizedText);
+		} else {_field.setText("NO OCR TEXT");
+		
+		Log.i(EVENT, "OCR Cleaned Text --> " + recognizedText);
+		
+	}
+	
+	}
+	
 }

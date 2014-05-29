@@ -15,6 +15,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	Button addRecordButton;
 	Button viewLogButton;
 	Button manageLogButton;
+	Button goNutsButton;
 	
     private static final String EVENT = "Event";
     private static final String LIFE = "LifeCycle";
@@ -26,6 +27,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
         public void homeAddRecordButton();
         public void homeViewLogButton();
         public void homeSaveLogButton();
+        public void goNuts();
     }
 
     //THIS SECTION ENSURES INTERFACE COMPLIANCE
@@ -57,7 +59,9 @@ public class HomeFragment extends Fragment implements OnClickListener {
         viewLogButton.setOnClickListener(this); 
         manageLogButton = (Button) rootView.findViewById(R.id.home_manage_log_button);
         manageLogButton.setOnClickListener(this);
-    	
+        goNutsButton = (Button) rootView.findViewById(R.id.go_nuts);
+        goNutsButton.setOnClickListener(this);
+        
         //RETURN THE VIEW
         return rootView;
     }
@@ -80,7 +84,11 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	        break;
 	    case R.id.home_manage_log_button:
 	    	Log.i(EVENT, "HomeFrag calling homeSaveLogButton()");
-				activityCallback.homeSaveLogButton();
+			activityCallback.homeSaveLogButton();
+	        break;
+	    case R.id.go_nuts:
+	    	Log.i(EVENT, "HomeFrag calling goNuts()");
+			activityCallback.goNuts();
 	        break;
 	        
 		}

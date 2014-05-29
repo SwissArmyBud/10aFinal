@@ -5,6 +5,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -31,7 +32,16 @@
             android:layout_height="wrap_content"
             android:text="Save/Load Log"
             android:textSize="20dp" />
-
     </LinearLayout>
+
+    <Button
+        android:id="@+id/go_nuts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:text="Go Nuts"
+        android:textSize="20dp" />
 
 </RelativeLayout>
