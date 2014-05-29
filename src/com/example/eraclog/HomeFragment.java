@@ -87,6 +87,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		
     }
 	
+	
    /* ____________________________________________
 	*
 	*	THIS AREA IS FOR ADDING SUPPORTING METHODS
