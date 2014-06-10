@@ -49,7 +49,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 	private static final String EVENT = "Event";
 	private static Record[] washLog = {};
 	private int lastSelection = -1;
-	
+
 	//GLOBAL PROGRAM SETTINGS
 	JSONObject settingsJSON;
 	public static String defaultCSVFilename = "Saved Log";
@@ -90,7 +90,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		}
 
 		goToHomeScreen();
-		
+
 	}
 
 	protected void onStart() {
@@ -121,13 +121,13 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		Log.i(LIFE, "onStop");
 
 		saveLogInternalStorage();
-		
+
 	}
 
 	protected void onRestart() { //CALLED BETWEEN onStop AND onStart WHEN RESTARTING FROM PAST onStop IN LIFECYCLE
 		super.onRestart();
 		Log.i(LIFE, "onRestart");
-		
+
 	}
 
 	protected void onDestroy() {
@@ -209,19 +209,19 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 	}
 
 	/***NOTE***!!!--- ALL NON ACTIVITY METHODS PAST HERE REQUIRE updateStatus() AT FINISH ---!!!***NOTE***/
-	
+
 	//BUTTON CALLBACK METHODS 
 	//_____________________________________
 	//
 	@Override
- 	public void homeAddRecordButton() {
+	public void homeAddRecordButton() {
 		Log.i(EVENT, "MainActivity homeAddRecordButtonPush()");
 
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 		ProcessRecordFragment recordFrag = new ProcessRecordFragment();	
 		ProcessRecordMenuFrag recordMenuFrag = new ProcessRecordMenuFrag();	
 		fragmentTransition(recordFrag, "RecordFrag", recordMenuFrag, "RecordMenuFrag");
-		
+
 		updateStatus("**NEW RECORD**");
 	}
 
@@ -233,7 +233,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		LogViewFragment logFrag = new LogViewFragment();	
 		LogViewMenuFrag logMenuFrag = new LogViewMenuFrag();
 		fragmentTransition(logFrag, "LogViewFrag", logMenuFrag, "LogMenuFrag");
-		
+
 		updateStatus("**VIEWING LOG**");
 	}
 
@@ -244,29 +244,29 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 		LogSaveFragment saveLogFrag = new LogSaveFragment();
 		fragmentTransition(saveLogFrag, "SaveLogFrag");
-		
+
 		updateStatus("**MANAGING LOG**");
 	}
-	
+
 	@Override
 	public void saveLoadLogButton() {
 		Log.i(EVENT, "MainActivity saveLoadLogButton()");
-		
+
 		loadLogInternalStorage();
 		goToHomeScreen();
 		updateStatus("**LOG LOADED**");
-		
+
 	}
 
 	@Override
 	public void saveSaveLogButton() {
 		Log.i(EVENT, "MainActivity saveSaveLogButton()");
-		
+
 		saveLogInternalStorage();
 		saveLogToCSV();
 		goToHomeScreen();
 		updateStatus("**LOG SAVED**");
-		
+
 	}
 
 	public void saveClearLogButton() {
@@ -280,36 +280,36 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 	public void settingsSaveButton() {
 		Log.i(EVENT, "MainActivity() settingsSaveButton()");
-		
+
 		//FIND THE LOG FRAGMENT WHILE IT IS STILL RUNNING AND EXTRACT THE SETTINGS IN JSON FORMAT
 		SettingsPageFragment settingsPageFrag = (SettingsPageFragment) getSupportFragmentManager().findFragmentByTag("SettingsFrag");
 		settingsJSON = settingsPageFrag.getSettingsInJSON();
-		
+
 		try {
-		
-		//GET REFERENCE TO WRITERS
-		FileOutputStream fileStream = null; 
-		OutputStreamWriter streamWriter = null;
-		BufferedOutputStream bufferedStream = null;
 
-		//SETUP THE DIRECTORY AND FILE FOR WRITING
-		String root = Environment.getExternalStorageDirectory().toString();
-		File directory = new File(root + "/ERAC E-Log/temp");
-		String filename = "settings.json";
-		directory.mkdirs();
-		File file = new File (directory, filename);
+			//GET REFERENCE TO WRITERS
+			FileOutputStream fileStream = null; 
+			OutputStreamWriter streamWriter = null;
+			BufferedOutputStream bufferedStream = null;
 
-		//EXECUTE THE JSON WRITE
-		fileStream = new FileOutputStream(file);
-		bufferedStream = new BufferedOutputStream(fileStream);  
-		streamWriter = new OutputStreamWriter(bufferedStream); 
-		streamWriter.write(settingsJSON.toString());
-		bufferedStream.flush();
-		streamWriter.flush(); 
-		streamWriter.close();
-		
+			//SETUP THE DIRECTORY AND FILE FOR WRITING
+			String root = Environment.getExternalStorageDirectory().toString();
+			File directory = new File(root + "/ERAC E-Log/temp");
+			String filename = "settings.json";
+			directory.mkdirs();
+			File file = new File (directory, filename);
+
+			//EXECUTE THE JSON WRITE
+			fileStream = new FileOutputStream(file);
+			bufferedStream = new BufferedOutputStream(fileStream);  
+			streamWriter = new OutputStreamWriter(bufferedStream); 
+			streamWriter.write(settingsJSON.toString());
+			bufferedStream.flush();
+			streamWriter.flush(); 
+			streamWriter.close();
+
 		} catch (IOException e) {e.printStackTrace();} 
-		
+
 		goToHomeScreen();
 		updateStatus("**SETTINGS SAVED**");
 	}
@@ -317,7 +317,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 	//OTHER CALLBACKS
 	//_____________________________________
 	//
-	
+
 	//GETS CALLED BY ProcessRecord OR ProcessRecordEdit TO SAVE THE FRAGMENT'S RECORD INTO THE LOG
 	@Override
 	public void saveRecordToLog() {
@@ -329,13 +329,13 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		//GET A RECORD FROM THE RUNNING ProcessRecordFragment AND ADD IT TO THE ARRAY IN THE POSITION IS WAS RECIEVED FROM (lastSelection SET IN editSelectedRecord)
 		Record newRecord = recordFrag.getRecord();
 		addRecordToLog(newRecord, lastSelection);
-		
+
 		goToHomeScreen();
 
 		updateStatus("**RECORD " + lastSelection + " SAVED**");
-		
+
 		lastSelection = -1;
-		
+
 	}
 
 	//GETS CALLED BY LogViewMenu, SETS UP THE RECORD FOR EDITING
@@ -344,26 +344,26 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		Log.i(EVENT, "MainActivity editSelectedRecord() selection --> " + logHasSelection());
 
 		if (logHasSelection() != -1) {
-		
-		//SET THE lastSelection GLOBAL SELECTION VARIABLE TO THE LogView SELECTION 
-		lastSelection = logHasSelection();
 
-		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
-		ProcessRecordFragment recordFrag = new ProcessRecordFragment();		
-		RecordEditMenuFrag recordMenuFrag = new RecordEditMenuFrag();
-		fragmentTransition(recordFrag, "RecordFrag", recordMenuFrag, "RecordMenuFrag");
+			//SET THE lastSelection GLOBAL SELECTION VARIABLE TO THE LogView SELECTION 
+			lastSelection = logHasSelection();
 
-		//SET THE FIELDS IN THE ProcessRecordFragment USING THE SELECTED ID FROM THE ListView
-		recordFrag.setFields(lastSelection, washLog);
-		updateStatus("**EDITING RECORD " + lastSelection + "**");
+			//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
+			ProcessRecordFragment recordFrag = new ProcessRecordFragment();		
+			RecordEditMenuFrag recordMenuFrag = new RecordEditMenuFrag();
+			fragmentTransition(recordFrag, "RecordFrag", recordMenuFrag, "RecordMenuFrag");
+
+			//SET THE FIELDS IN THE ProcessRecordFragment USING THE SELECTED ID FROM THE ListView
+			recordFrag.setFields(lastSelection, washLog);
+			updateStatus("**EDITING RECORD " + lastSelection + "**");
 		}
-		
+
 	}
-	
+
 	//ACTIVITY METHODS
 	//_____________________________________
 	//
-	
+
 	private int logHasSelection() { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity selectionTrue()");
 
@@ -387,9 +387,9 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		else if (selection > -1) {
 			washLog[selection] = record;
 		}
-		
+
 	}
-	
+
 	private void addHeadersToLog(){ //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity addHeadersToLog()");
 
@@ -398,9 +398,9 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		System.arraycopy(washLog, 0, newArray, 1, washLog.length);
 		newArray[0] = new Record();
 		washLog = newArray;
-		
+
 	}
-	
+
 	private void saveLogInternalStorage () { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity saveLogInternalStorage()");
 
@@ -462,7 +462,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 				} catch (JSONException e) {e.printStackTrace();}
 			} catch (FileNotFoundException e) {e.printStackTrace();}
 		} catch (IOException e) {e.printStackTrace();}
-		
+
 	}
 
 	private void loadLogInternalStorage () { //ACTIVITY METHOD
@@ -526,13 +526,13 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 		//SAVE THE RESULTING ARRAY INTO THE CURRENT WASHLOG POSITION
 		washLog = tempLog;
-		
+
 	}
 
 	private void loadSettingsFromJSON () {
 		Log.i(EVENT, "MainActivity loadSettingsFromJSON()");
 		JSONObject inputJSON = null;
-		
+
 		try {
 			try {
 
@@ -565,7 +565,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 			} catch (JSONException e) {e.printStackTrace();}
 		} catch (IOException e) {e.printStackTrace();Log.i(EVENT, "SETTINGS FILE NOT AVAILABLE, USING DEFAULTS");}
 	}
-	
+
 	private void saveLogToCSV() { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity saveLogToCSV()");
 
@@ -629,7 +629,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 		//LOAD THE SAVED LOG FROM INTERNAL STORAGE, BASICALLY JUST REMOVING THE HEADERS
 		loadLogInternalStorage();
-		
+
 	}
 
 	private void fragmentTransition(Fragment topFrag, String topFragName, Fragment bottomFrag, String bottomFragName) { //ACTIVITY METHOD
@@ -641,20 +641,20 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		transaction.addToBackStack(null);
 		transaction.commit();
 		getSupportFragmentManager().executePendingTransactions();
-		
+
 	}
 
 	private void fragmentTransition(Fragment topFrag, String topFragName) { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity fragmentTransition(Fragment, String)");
 
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();	
-		
+
 		//TESTS FOR A LOWER FRAME AND THEN REMOVES IT IF IT EXISTS
 		if (getSupportFragmentManager().findFragmentById(R.id.main_bottom_frame) != null) {
 			Fragment menuFrag = (Fragment) getSupportFragmentManager().findFragmentById(R.id.main_bottom_frame);
 			transaction.remove(menuFrag);
-			}
-		
+		}
+
 		transaction.replace(R.id.main_top_frame, topFrag, topFragName);
 		transaction.addToBackStack(null);
 		transaction.commit();
@@ -664,42 +664,42 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 	public void goToHomeScreen() { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity goToHomeScreen()");
-		
+
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 		HomeFragment homeFrag = new HomeFragment();		
 		fragmentTransition(homeFrag, "HomeFrag");
-		
+
 		updateStatus("**AT HOME**");
 	}
 
 	private void goToSettingsPage() { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity goToSettingsPage()");
-		
+
 		//WORK THROUGH THE APPROPRIATE FRAGMENT TRANSITIONS
 		SettingsPageFragment settingsFrag = new SettingsPageFragment();		
 		SettingsPageMenuFrag settingsMenuFrag = new SettingsPageMenuFrag();
 		fragmentTransition(settingsFrag, "SettingsFrag", settingsMenuFrag, "SettingsMenuFrag");
-		
+
 		settingsFrag.setFields(settingsJSON);
 		updateStatus("**SETTINGS**");
 	}
-	
+
 	//ALLOWS THE PROGRAM TO UPDATE THE STATUS TAB AT THE BOTTOM OF THE SCREEN
 	private void updateStatus(String string) { //ACTIVITY METHOD
 		Log.i(EVENT, "MainActivity updateStatus() --> " + string);
 
 		TextView statusText = (TextView) findViewById(R.id.current_status);
 		statusText.setText(string);
-		
+
 	}
 
 	@Override
 	public void goNuts() {
 		Log.i(EVENT, "MainActivity goNuts()");
-		
+
 		OCRProcessFragment OCRFrag = new OCRProcessFragment();
 		fragmentTransition(OCRFrag, "OCRFrag");
-		
+
 	}
 
 	@Override
@@ -711,9 +711,9 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		if (resultCode == -1) {
 			onPhotoTaken();
 		} else {Log.i(EVENT, "User cancelled");}
-		
+
 	}
-	
+
 	public void beginOCRTask() {
 		Log.i(LIFE, "HomeFragment onCreateView");
 
@@ -738,27 +738,26 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 		// You can get them at:
 		// http://code.google.com/p/tesseract-ocr/downloads/list
 		// This area needs work and optimization
-		if (!(new File(DATA_PATH + "tessdata/" + lang + ".traineddata")).exists()) {
-			try {
+		try {
 
-				AssetManager assetManager = getAssets();
-				InputStream in = assetManager.open("tessdata/" + lang + ".traineddata");
-				OutputStream out = new FileOutputStream(DATA_PATH
-						+ "tessdata/" + lang + ".traineddata");
+			AssetManager assetManager = getAssets();
+			InputStream in = assetManager.open(lang + ".traineddata");
+			OutputStream out = new FileOutputStream(DATA_PATH
+					+ "tessdata/" + lang + ".traineddata");
 
-				// Transfer bytes from in to out
-				byte[] buf = new byte[1024];
-				int len;
-				while ((len = in.read(buf)) > 0) {
-					out.write(buf, 0, len);
-				}
-				in.close();
-				out.close();
+			// Transfer bytes from in to out
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
 
-				Log.i(EVENT, "Copied " + lang + " traineddata");
-				
-			} catch (IOException e) {Log.i(EVENT, "Was unable to copy " + lang + " traineddata " + e.toString());}
-		}
+			Log.i(EVENT, "Copied " + lang + " traineddata");
+
+		} catch (IOException e) {Log.i(EVENT, "Was unable to copy " + lang + " traineddata " + e.toString());}
+
 
 		OCRpath = DATA_PATH + "/ocr.jpg";
 
@@ -771,7 +770,7 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 		startActivityForResult(intent, 0);
 	}
-	
+
 	protected void onPhotoTaken() {
 
 		BitmapFactory.Options options = new BitmapFactory.Options();
@@ -837,15 +836,15 @@ public class MainActivity extends FragmentActivity implements SaveLogFragInterfa
 
 		recognizedText = recognizedText.trim();
 		EditText _field = (EditText) findViewById(R.id.go_nuts_field);
-		
+
 		if ( recognizedText.length() != 0 ) {
 			_field.setText(recognizedText);
 		} else {_field.setText("NO OCR TEXT");
-		
+
 		Log.i(EVENT, "OCR Cleaned Text --> " + recognizedText);
-		
+
+		}
+
 	}
-	
-	}
-	
+
 }
